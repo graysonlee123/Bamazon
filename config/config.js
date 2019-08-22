@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 
 // Creates mySQL connection using Sequelize
-const sequelize = new Sequelize("sequelize_library", "root", "funfunfun", {
+const sequelize = new Sequelize("bamazon", "root", "funfunfun", {
 	host: "localhost",
 	port: 3306,
 	dialect: "mysql"
