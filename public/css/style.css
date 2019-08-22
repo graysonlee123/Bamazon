@@ -1,3 +1,38 @@
+/* General */
+
+.restrict-width {
+    width: 90%;
+    max-width: 1600px;
+    margin: auto;
+}
+
+/* Nav */
+
+#navbar {
+    height: 120px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#nav-list {
+    list-style: none;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 200px;
+}
+
+.nav-item {
+    display: inline;
+}
+
+
+
+/* Products */
+
 #product-scroll {
     overflow-x: auto;
 }
