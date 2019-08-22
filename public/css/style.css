@@ -65,6 +65,7 @@
 
 #products {
     overflow-x: auto;
+    scroll-behavior: smooth;
 }
 
 #products-display {
