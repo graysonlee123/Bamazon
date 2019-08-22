@@ -7,7 +7,7 @@ const sequelize = require("../config/config.js");
 const Product = sequelize.define("Product", {
     product_name: {
         type: dataType.STRING,
-        allowNull: false;
+        allowNull: false
     },
     department_name: {
         type: dataType.STRING,
@@ -22,3 +22,9 @@ const Product = sequelize.define("Product", {
         allowNull: false
     }
 });
+
+// Sync with the table, if no table, create one
+Product.sync()
+
+//Export for api-routs.js
+module.exports = Product;
