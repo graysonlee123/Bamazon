@@ -20,15 +20,6 @@ $("#products-display").on("click", ".product-container", e => {
     window.location.href = "/product?product_id=" + id;
 });
 
-$("#exit-overlay").on("click", e => closeOverlay());
-
-function addToCart(id) {
-    const qty = parseInt($("#quantity-select").val());
-    console.log("Adding to cart... id: " + id + ", Quantity: " + qty);
-    cartItems.push({ itemId: id, itemQty: qty });
-    localStorage.setItem("cartIds", JSON.stringify(cartItems));
-};
-
 $(document).ready(function () {
     renderProducts();
     let scrolling = false;

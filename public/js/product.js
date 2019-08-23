@@ -9,7 +9,7 @@ $(document).ready(function () {
     // If we have this section in our url, we pull out the post id from the url
     // In localhost:8080/cms?post_id=1, postId is 1
     if (url.indexOf("?product_id=") !== -1) {
-        productId = url.split("=")[1];
+        productId = parseInt(url.split("=")[1]);
         renderProduct(productId);
     };
 
@@ -26,7 +26,9 @@ $(document).ready(function () {
     }
 
     function addToCart() {
-        const quantity = $("#quantity").val();
-        console.log("adding to cart item id: " + productId + ". Quantity: " + quantity);
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        cart.push( {id: productId, quantity: parseInt($("#quantity").val()) });
+        localStorage.setItem("cart", JSON.stringify(cart));
+        window.location.href = "/cart";
     }
 });

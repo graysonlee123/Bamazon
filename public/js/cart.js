@@ -1,23 +1,22 @@
-const cart = $("#cart-div");
+const cartDiv = $("#cart-div");
 const cartList = $("#cart-list");
 
-const cartIds = JSON.parse(localStorage.getItem("cartIds"));
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
 let total = 0;
 
-if (!cartIds || !cartIds.length) {
+if (cart === []) {
     console.log("Empty Cart!");
 } else {
-    cartIds.forEach(item => {
-        buildListItem(item);
+    cart.forEach(cartItem => {
+        buildListItem(cartItem);
     });
 };
 
 function buildListItem(item) {
-    console.log(item);
-    $.get("/api/products/" + item.itemId).then(product => {
+    $.get("/api/products/" + item.id).then(product => {
         total += product.price;
 
-        product.userPurchaseQuantity = item.itemQty;
+        product.userPurchaseQuantity = item.quantity;
 
         const listItem = $("<li>");
         listItem.addClass("cart-list-item");
@@ -42,4 +41,4 @@ function buildListItem(item) {
 const userTotal = $(`<span class="user-total">`);
 userTotal.text(`\$${total}`);
 
-cart.append(userTotal);
+cartDiv.append(userTotal);
