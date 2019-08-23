@@ -9,6 +9,8 @@
 
     <link rel="stylesheet" href="https://use.typekit.net/vua5cvo.css">
 
+    <script src="https://kit.fontawesome.com/712551befc.js"></script>
+
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
 
@@ -16,6 +18,11 @@
 </head>
 
 <body>
+    <div id="overlay" class="overlay">
+        <i id="exit-overlay" class="fas fa-times"></i>
+        <div id="overlay-item"></div>
+    </div>
+
     <div id="layout">
 
         <nav class="restrict-width" id="navbar">
@@ -24,6 +31,7 @@
                 <li class="nav-item"><a href="#">Home</a></li>
                 <li class="nav-item"><a href="#">About</a></li>
                 <li class="nav-item"><a href="#">Contact</a></li>
+                <li class="nav-item"><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
             </ul>
         </nav>
 
@@ -37,46 +45,6 @@
     </div>
 
     <script src="js/app.js"></script>
-    <script>
-        $(document).ready(function () {
-            let scrolling = false;
-            const products = $("#products");
-
-            $("#layout").bind('mousewheel', function (e) {
-                if (!scrolling) {
-                    setTimeout(() => {
-                        scrolling = false;
-                    }, 1200);
-                    scrolling = true;
-                    if (e.originalEvent.wheelDelta / 120 > 0) {
-                        console.log('scrolling up !');
-                        scroll(620);
-                    }
-                    else {
-                        console.log('scrolling down !');
-                        scroll(-620);
-                    }
-                }
-            });
-            function scroll(distance) {
-                const products = $("#products");
-                products.stop().animate({
-                    scrollLeft: products.scrollLeft() + distance
-                }, 500);
-            }
-        });
-
-        function showItem(id) {
-            $.get("/api/products/id/" + id).then(data => {
-                console.log(data);
-            });
-        };
-
-        $("#products-display").on("click", ".product-container", e => {
-            const id = $(e.currentTarget).attr("data-id")
-            showItem(id);
-        })
-    </script>
 </body>
 
 </html>
