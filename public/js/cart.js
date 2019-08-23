@@ -4,12 +4,16 @@ const cartList = $("#cart-list");
 const cartIds = JSON.parse(localStorage.getItem("cartIds"));
 let total = 0;
 
-cartIds.forEach( item => {
-    buildListItem(item);
-})
+if (!cartIds || !cartIds.length) {
+    console.log("Empty Cart!");
+} else {
+    cartIds.forEach(item => {
+        buildListItem(item);
+    });
+};
 
 function buildListItem(item) {
-    $.get("/api/products/id/" + item.itemId).then( data => {
+    $.get("/api/products/id/" + item.itemId).then(data => {
         const product = buildItemObj(data);
         total += product.price;
 
@@ -18,13 +22,16 @@ function buildListItem(item) {
         const listItem = $("<li>");
         listItem.addClass("cart-list-item");
 
-        const image = $(`<img src="/images/products/${product.trimmedName}.jpg">`);
+        const image = $(`<img>`);
+        image.attr("src", `/images/products/${product.trimmedName}.jpg`)
         image.addClass("cart-img");
 
-        const itemName = $(`<h3 class="cart-item-name">`);
+        const itemName = $(`<h3>`);
+        itemName.addClass("cart-item-name");
         itemName.text(`${product.name}`);
-        
-        const itemQuantity = $(`<span class="cart-quantity">`);
+
+        const itemQuantity = $(`<span>`);
+        itemQuantity.addClass("cart-quantity");
         itemQuantity.text(product.userPurchaseQuantity);
 
         listItem.append(image, itemName, itemQuantity);
