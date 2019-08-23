@@ -1,15 +1,5 @@
 const container = $("#products-display");
-
-function buildItemObj(product) {
-    return {
-        id: product.id,
-        name: product.product_name,
-        trimmedName: product.product_name.replace(/([ ])/g, "").toLowerCase(),
-        department: product.department_name,
-        price: product.price,
-        stock: product.stock_quantity
-    };
-};
+const cartItems = JSON.parse(localStorage.getItem("cartIds")) || [];
 
 function renderProducts() {
     $.get("/api/products", data => {
@@ -58,6 +48,8 @@ function addToCart(id) {
     const qty = $("#quantity-select").val();
     closeOverlay();
     console.log("Adding to cart... id: " + id + ", Quantity: " + qty);
+    cartItems.push({ itemId: id, itemQty: qty });
+    localStorage.setItem("cartIds", JSON.stringify(cartItems));
 };
 
 function closeOverlay() {

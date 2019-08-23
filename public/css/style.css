@@ -152,11 +152,14 @@
     opacity: 0.5;
 }
 
+
+
 /* Cart  */
 
+/* Wraps entire page and centers #cart-div */
 #cart-wrapper {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -171,7 +174,23 @@
     padding: 16px;
 }
 
+#navbar {
+    grid-area: header;
+}
 
+#cart-wrapper {
+    grid-area: main;
+}
+
+#footer {
+    grid-area: footer;
+}
+
+.cart-img {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+}
 
 
 /* Footer */

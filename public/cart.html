@@ -18,10 +18,33 @@
 </head>
 
 <body>
-    <div id="cart-wrapper">
-        <div id="cart-div">Your cart</div>
+    <div id="layout">
+        <nav class="restrict-width" id="navbar">
+            <h1 id="brand">Bamazon</h1>
+            <ul id="nav-list">
+                <li class="nav-item"><a href="/">Home</a></li>
+                <li class="nav-item"><a href="#">About</a></li>
+                <li class="nav-item"><a href="#">Contact</a></li>
+                <li class="nav-item"><a href="/cart"><i class="fas fa-shopping-cart"></i></a></li>
+            </ul>
+        </nav>
+    
+        <div id="cart-wrapper">
+            <div id="cart-div">
+                Your Cart
+                <ul id="cart-list">
+    
+                </ul>
+                <button>Submit Order</button>
+            </div>
+        </div>
+    
+        <footer id="footer">
+            <span>Created by <a href="http://www.github.com/graysonlee123">Grayson Gantek</a></span>
+        </footer>
     </div>
 
+    <script src="js/buildItemObj.js"></script>
     <script src="js/cart.js"></script>
 </body>
 
