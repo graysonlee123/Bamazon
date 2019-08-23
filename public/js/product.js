@@ -1,10 +1,10 @@
 $(document).ready(function () {
 
     const url = window.location.search;
+    let productId = null;
 
-    $(document).on("click", "i#products-exit", event => {
-        window.location.href = "/"
-    });
+    $(document).on("click", "i#products-exit", function() { window.location.href = "/" });
+    $(document).on("click", "#submit", addToCart);
 
     // If we have this section in our url, we pull out the post id from the url
     // In localhost:8080/cms?post_id=1, postId is 1
@@ -22,10 +22,11 @@ $(document).ready(function () {
             $("#price").text(product.price);
             $("#department").text(product.department_name);
             $("#image").attr('src', '/images/products/' + product.image_file);
-
-            //remove and use returned results
-            // $("#product-display").text(product.product_name);
-            // This is where we would render the Div for the product, and the submit / add to cart / quantity
         });
-    };
+    }
+
+    function addToCart() {
+        const quantity = $("#quantity").val();
+        console.log("adding to cart item id: " + productId + ". Quantity: " + quantity);
+    }
 });
