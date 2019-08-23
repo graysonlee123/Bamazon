@@ -6,6 +6,9 @@
     margin: auto;
 }
 
+.stop-scrolling {
+    overflow: hidden;
+}
 
 
 /* Layout */
@@ -65,7 +68,6 @@
 
 #products {
     overflow-x: auto;
-    scroll-behavior: smooth;
 }
 
 #products-display {
