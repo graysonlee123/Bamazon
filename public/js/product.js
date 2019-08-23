@@ -18,6 +18,11 @@ $(document).ready(function () {
             console.log("Product pre process:");
             console.log(product);
 
+            $("#name").text(product.product_name);
+            $("#price").text(product.price);
+            $("#department").text(product.department_name);
+            $("#image").attr('src', '/images/products/' + product.image_file);
+
             //remove and use returned results
             // $("#product-display").text(product.product_name);
             // This is where we would render the Div for the product, and the submit / add to cart / quantity
