@@ -152,6 +152,26 @@
     opacity: 0.5;
 }
 
+/* Cart  */
+
+#cart-wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#cart-div {
+    width: 400px;
+    min-height: 400px;
+    height: auto;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+    padding: 16px;
+}
+
+
 
 
 /* Footer */

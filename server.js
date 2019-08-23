@@ -13,10 +13,10 @@ app.use(express.json());
 app.use(express.static("public"));
 
 //Serve API routes 
-require("./routes/api-routes.js")(app);
+require("./routes/api-routes")(app);
 
 //Serve HTML routes
-require("./routes/html-routes.js")(app);
+require("./routes/html-routes")(app);
 
 // Sync tables and start server
 // On development environments, use sync({force: true})
