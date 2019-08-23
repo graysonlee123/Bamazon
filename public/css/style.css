@@ -113,47 +113,6 @@
 
 
 
-/* Overlay */
-
-.overlay {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: white;
-    z-index: 5;
-
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity ease-in-out 300ms;
-}
-
-.overlay-active {
-    visibility: visible;
-    opacity: 1;
-}
-
-.overlay-image {
-    width: 600px;
-    height: 400px;
-    object-fit: cover;
-}
-
-#exit-overlay {
-    cursor: pointer;
-    position: fixed;
-    top: 30px;
-    right: 30px;
-    font-size: 18px;
-    opacity: 0.5;
-}
-
-
-
 /* Cart  */
 
 /* Wraps entire page and centers #cart-div */
@@ -191,6 +150,7 @@
     height: 20px;
     object-fit: cover;
 }
+
 
 
 /* Footer */

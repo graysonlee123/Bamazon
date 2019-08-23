@@ -4,11 +4,10 @@ const cartItems = JSON.parse(localStorage.getItem("cartIds")) || [];
 function renderProducts() {
     $.get("/api/products", data => {
         data.forEach(product => {
-            product = buildItemObj(product);
-            container.append(`<div class="product-container" data-id="${product.id}" data-name="${product.trimmedName}" data-department="${product.department}" data-stock="${product.stock}">
-                <img class="product-image" src="/images/products/${product.trimmedName}.jpg">
+            container.append(`<div class="product-container" data-id="${product.id}">
+                <img class="product-image" src="/images/products/${product.image_file}">
                 <div class="product-text-container">
-                    <h2 class="product-name">${product.name}</h2>
+                    <h2 class="product-name">${product.product_name}</h2>
                     <p class="product-price">\$${product.price}</p>
                 </div>
             </div>`);
@@ -16,45 +15,18 @@ function renderProducts() {
     });
 };
 
-function showItem(id) {
-    $.get("/api/products/id/" + id).then(product => {
-        product = buildItemObj(product);
-        $("#overlay").addClass("overlay-active");
-        $("#overlay-item").append(`<div>
-            <img src="/images/products/${product.trimmedName}.jpg" class="overlay-image">
-            <h2 class="product-name">${product.name}</h2>
-            <p class="product-price">${product.price}</p>
-            <select id="quantity-select">
-                
-            </select>
-            <input type="submit" onclick="addToCart(${product.id})">
-</div>`);
-        for (let i = 1; i <= product.stock; i ++ ) {
-            $("#quantity-select").append(`<option value="${i}">${i}</option>`);
-            if (i >= 3) break;
-        }
-    });
-    
-};
-
 $("#products-display").on("click", ".product-container", e => {
     const id = $(e.currentTarget).attr("data-id")
-    showItem(id);
+    window.location.href = "/product?product_id=" + id;
 });
 
 $("#exit-overlay").on("click", e => closeOverlay());
 
 function addToCart(id) {
-    const qty = $("#quantity-select").val();
-    closeOverlay();
+    const qty = parseInt($("#quantity-select").val());
     console.log("Adding to cart... id: " + id + ", Quantity: " + qty);
     cartItems.push({ itemId: id, itemQty: qty });
     localStorage.setItem("cartIds", JSON.stringify(cartItems));
-};
-
-function closeOverlay() {
-    $("#overlay").removeClass("overlay-active");
-    $("#overlay-item").empty();
 };
 
 $(document).ready(function () {

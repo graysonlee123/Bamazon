@@ -8,8 +8,12 @@ module.exports = function(sequelize, dataType) {
             type: dataType.STRING,
             allowNull: false,
         },
+        image_file: {
+            type:dataType.STRING,
+            allowNull: false
+        },
         price: {
-            type: dataType.INTEGER,
+            type: dataType.DECIMAL(10,2),
             allowNull: false,
         },
         stock_quantity: {

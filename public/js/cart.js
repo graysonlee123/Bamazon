@@ -13,8 +13,8 @@ if (!cartIds || !cartIds.length) {
 };
 
 function buildListItem(item) {
-    $.get("/api/products/id/" + item.itemId).then(data => {
-        const product = buildItemObj(data);
+    console.log(item);
+    $.get("/api/products/" + item.itemId).then(product => {
         total += product.price;
 
         product.userPurchaseQuantity = item.itemQty;
@@ -23,12 +23,12 @@ function buildListItem(item) {
         listItem.addClass("cart-list-item");
 
         const image = $(`<img>`);
-        image.attr("src", `/images/products/${product.trimmedName}.jpg`)
+        image.attr("src", `/images/products/${product.image_file}`)
         image.addClass("cart-img");
 
         const itemName = $(`<h3>`);
         itemName.addClass("cart-item-name");
-        itemName.text(`${product.name}`);
+        itemName.text(`${product.product_name}`);
 
         const itemQuantity = $(`<span>`);
         itemQuantity.addClass("cart-quantity");
