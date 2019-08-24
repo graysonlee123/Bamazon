@@ -1,4 +1,4 @@
-module.exports = function(sequelize, dataType) {
+module.exports = function (sequelize, dataType) {
     return sequelize.define("Product", {
         product_name: {
             type: dataType.STRING,
@@ -9,16 +9,23 @@ module.exports = function(sequelize, dataType) {
             allowNull: false,
         },
         image_file: {
-            type:dataType.STRING,
+            type: dataType.STRING,
             allowNull: false
         },
         price: {
-            type: dataType.DECIMAL(10,2),
+            type: dataType.DECIMAL(10, 2),
             allowNull: false,
+            validate: {
+                min: 0,
+                msg: "Can't set a price less than 0!"
+            }
         },
         stock_quantity: {
             type: dataType.INTEGER,
             allowNull: false,
+            validate: {
+                min: { args: [0], msg: "Pick 0-100 please" }
+            }
         }
     });
 };

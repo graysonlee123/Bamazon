@@ -2,17 +2,23 @@ $(document).ready(function () {
     const cartDiv = $("#cart-div");
     const cartList = $("#cart-list");
 
+    // Flag for setting when the user loads the page with items in their cart
+    let itemsInCart = false;
+
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     let total = 0;
 
     $(document).on("click", "#clear-cart", clearCart);
     $("#cart-list").on("click", ".clear-cart-item", removeItemFromCart);
-    
+    $("#cart-div").on("click", "#submit-order", submitOrder);
+
     if (cart.length != 0) {
+        itemsInCart = true;
         cart.forEach(cartItem => {
             buildListItems(cartItem);
         });
-        calculateTotal();
+        $("#submit-order").removeAttr("disabled");
+        $("#clear-cart").removeAttr("disabled");
     } else {
         console.log("Empty Cart!");
     };
@@ -25,9 +31,9 @@ $(document).ready(function () {
 
     function buildListItems(item) {
         $.get("/api/products/" + item.id).then(product => {
-            total += product.price;
-
             product.userPurchaseQuantity = item.quantity;
+
+            calculateTotal(product.price * product.userPurchaseQuantity);
 
             const listItem = $("<li>");
             listItem.addClass("cart-list-item");
@@ -52,31 +58,58 @@ $(document).ready(function () {
         });
     }
 
-    function calculateTotal() {
-        const userTotal = $(`<span class="user-total">`);
-        userTotal.text(`\$${total}`);
-
-        cartDiv.append(userTotal);
+    function calculateTotal(priceIncrement) {
+        const userTotalSpan = $(`<span class="user-total">`);
+        total += priceIncrement;
+        userTotalSpan.text(`\$${total.toFixed(2)}`);
+        cartDiv.append(userTotalSpan);
     }
 
     function removeItemFromCart() {
         const itemId = $(this).parent().attr("item-id");
         console.log(itemId);
-        if (cart) {
-            console.log("cart detected");
+        if (itemsInCart) {
             cart.forEach((item, index) => {
-                console.log(item, index);
 
                 // Has to be only two equal signs, for reasons unknown
                 if (item.id == itemId) {
-                    console.log("Removing from cart");
                     cart.splice(index, 1);
-                    console.log("Updated cart: ");
                     console.log(cart);
                     localStorage.setItem("cart", JSON.stringify(cart));
                     window.location.reload();
-                }
-            })
-        }
+                };
+            });
+        };
+    }
+
+    function submitOrder() {
+        console.log(itemsInCart);
+        console.log(cart);
+        if (itemsInCart) {
+            console.log("Submitting order...");
+            console.log(cart);
+            cart.forEach((item, index) => {
+                $.ajax({
+                    url: '/api/products/' + item.id,
+                    type: 'GET',
+                    success: data => {
+                        const newQuantity = data.stock_quantity - item.quantity;
+                        $.ajax({
+                            url: '/api/products/' + data.id + '/quantity',
+                            type: 'PUT',
+                            data: `stock_quantity=${newQuantity}`,
+                            success: function (err) {
+                                if (err) return console.log(err);
+                                else {
+                                    alert("Price updated succesfully! You were charged: " + total);
+                                    clearCart();
+                                    window.location.href = "/"
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        };
     }
 });
