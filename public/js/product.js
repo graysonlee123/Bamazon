@@ -30,10 +30,12 @@ $(document).ready(function () {
         let alreadyInCart = false;
         if (cart) {
             cart.forEach(item => {
-                if (item.id === productId) alreadyInCart = true;
-                alert("Already in cart!");
+                if (item.id === productId) {
+                    alreadyInCart = true;
+                    alert("Already in cart!");
+                };
             });
-        }
+        };
         if (alreadyInCart === false) addToCart(cart);
     }
 

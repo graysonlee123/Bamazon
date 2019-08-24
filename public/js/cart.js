@@ -6,7 +6,8 @@ $(document).ready(function () {
     let total = 0;
 
     $(document).on("click", "#clear-cart", clearCart);
-
+    $("#cart-list").on("click", ".clear-cart-item", removeItemFromCart);
+    
     if (cart.length != 0) {
         cart.forEach(cartItem => {
             buildListItems(cartItem);
@@ -30,6 +31,7 @@ $(document).ready(function () {
 
             const listItem = $("<li>");
             listItem.addClass("cart-list-item");
+            listItem.attr("item-id", product.id);
 
             const image = $(`<img>`);
             image.attr("src", `/images/products/${product.image_file}`)
@@ -43,7 +45,9 @@ $(document).ready(function () {
             itemQuantity.addClass("cart-quantity");
             itemQuantity.text(product.userPurchaseQuantity);
 
-            listItem.append(image, itemName, itemQuantity);
+            const clearItem = $('<i class="fas fa-times clear-cart-item">');
+
+            listItem.append(image, itemName, itemQuantity, clearItem);
             cartList.append(listItem);
         });
     }
@@ -53,5 +57,26 @@ $(document).ready(function () {
         userTotal.text(`\$${total}`);
 
         cartDiv.append(userTotal);
+    }
+
+    function removeItemFromCart() {
+        const itemId = $(this).parent().attr("item-id");
+        console.log(itemId);
+        if (cart) {
+            console.log("cart detected");
+            cart.forEach((item, index) => {
+                console.log(item, index);
+
+                // Has to be only two equal signs, for reasons unknown
+                if (item.id == itemId) {
+                    console.log("Removing from cart");
+                    cart.splice(index, 1);
+                    console.log("Updated cart: ");
+                    console.log(cart);
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    window.location.reload();
+                }
+            })
+        }
     }
 });
