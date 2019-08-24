@@ -1,44 +1,57 @@
-const cartDiv = $("#cart-div");
-const cartList = $("#cart-list");
+$(document).ready(function () {
+    const cartDiv = $("#cart-div");
+    const cartList = $("#cart-list");
 
-const cart = JSON.parse(localStorage.getItem("cart")) || [];
-let total = 0;
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let total = 0;
 
-if (cart === []) {
-    console.log("Empty Cart!");
-} else {
-    cart.forEach(cartItem => {
-        buildListItem(cartItem);
-    });
-};
+    $(document).on("click", "#clear-cart", clearCart);
 
-function buildListItem(item) {
-    $.get("/api/products/" + item.id).then(product => {
-        total += product.price;
+    if (cart.length != 0) {
+        cart.forEach(cartItem => {
+            buildListItems(cartItem);
+        });
+        calculateTotal();
+    } else {
+        console.log("Empty Cart!");
+    };
 
-        product.userPurchaseQuantity = item.quantity;
+    function clearCart() {
+        event.preventDefault();
+        localStorage.setItem('cart', JSON.stringify([]));
+        window.location.reload();
+    }
 
-        const listItem = $("<li>");
-        listItem.addClass("cart-list-item");
+    function buildListItems(item) {
+        $.get("/api/products/" + item.id).then(product => {
+            total += product.price;
 
-        const image = $(`<img>`);
-        image.attr("src", `/images/products/${product.image_file}`)
-        image.addClass("cart-img");
+            product.userPurchaseQuantity = item.quantity;
 
-        const itemName = $(`<h3>`);
-        itemName.addClass("cart-item-name");
-        itemName.text(`${product.product_name}`);
+            const listItem = $("<li>");
+            listItem.addClass("cart-list-item");
 
-        const itemQuantity = $(`<span>`);
-        itemQuantity.addClass("cart-quantity");
-        itemQuantity.text(product.userPurchaseQuantity);
+            const image = $(`<img>`);
+            image.attr("src", `/images/products/${product.image_file}`)
+            image.addClass("cart-img");
 
-        listItem.append(image, itemName, itemQuantity);
-        cartList.append(listItem);
-    });
-};
+            const itemName = $(`<h3>`);
+            itemName.addClass("cart-item-name");
+            itemName.text(`${product.product_name}`);
 
-const userTotal = $(`<span class="user-total">`);
-userTotal.text(`\$${total}`);
+            const itemQuantity = $(`<span>`);
+            itemQuantity.addClass("cart-quantity");
+            itemQuantity.text(product.userPurchaseQuantity);
 
-cartDiv.append(userTotal);
+            listItem.append(image, itemName, itemQuantity);
+            cartList.append(listItem);
+        });
+    }
+
+    function calculateTotal() {
+        const userTotal = $(`<span class="user-total">`);
+        userTotal.text(`\$${total}`);
+
+        cartDiv.append(userTotal);
+    }
+});

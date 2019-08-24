@@ -3,8 +3,8 @@ $(document).ready(function () {
     const url = window.location.search;
     let productId = null;
 
-    $(document).on("click", "i#products-exit", function() { window.location.href = "/" });
-    $(document).on("click", "#submit", addToCart);
+    $(document).on("click", "i#products-exit", function () { window.location.href = "/" });
+    $(document).on("click", "#submit", checkCart);
 
     // If we have this section in our url, we pull out the post id from the url
     // In localhost:8080/cms?post_id=1, postId is 1
@@ -25,9 +25,20 @@ $(document).ready(function () {
         });
     }
 
-    function addToCart() {
+    function checkCart() {
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
-        cart.push( {id: productId, quantity: parseInt($("#quantity").val()) });
+        let alreadyInCart = false;
+        if (cart) {
+            cart.forEach(item => {
+                if (item.id === productId) alreadyInCart = true;
+                alert("Already in cart!");
+            });
+        }
+        if (alreadyInCart === false) addToCart(cart);
+    }
+
+    function addToCart(cart) {
+        cart.push({ id: productId, quantity: parseInt($("#quantity").val()) });
         localStorage.setItem("cart", JSON.stringify(cart));
         window.location.href = "/cart";
     }
