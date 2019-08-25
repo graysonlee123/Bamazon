@@ -30,29 +30,21 @@ $(document).ready(function () {
             $.ajax({
                 url: "/api/products/" + productId,
                 method: "GET",
-                success: function(product) {
+                success: function (product) {
                     const quantity = product.stock_quantity;
                     const stockWarnElement = $("#out-of-stock-warning");
 
-                    // if (quantity <= 0) {
-                    //     stockWarnElement.text("Out of Stock!");
-                    //     $("#quantity").delete();
-                    // } else {
-                    //     if (quantity >= 1) {
-                    //         $("#select-one").removeAttr("disabled");
-                    //     };
-                    //     if (quantity >= 2) {
-                    //         $("#select-two").removeAttr("disabled");
-                    //     };
-                    //     if (quantity >= 3) {
-                    //         $("#select-three").removeAttr("disabled");
-                    //     };
-                    // };
-                    for (let i = 1, j = 1; i <= quantity && j <= 5; i ++, j++ ) {
-                        $("#quantity").append(`<option>${i}</option>`);
-                    }
+                    if (quantity <= 0) {
+                        stockWarnElement.text("Out of Stock!");
+                        $("#quantity").remove();
+                        $("#submit").attr("disabled", "");
+                    } else {
+                        for (let i = 1, j = 1; i <= quantity && j <= 5; i++ , j++) {
+                            $("#quantity").append(`<option>${i}</option>`);
+                        };
+                    };
                 }
-            })
+            });
         });
     }
 
