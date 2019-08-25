@@ -15,60 +15,60 @@ $(document).ready(function () {
         console.log("Showing all products...");
 
         $.get("/api/products").then(data => {
-            const table = $(`<table>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Department</th>
-                <th>Update Stock</th>
-                <th>Update Price</th>
-            </table>`);
+            const table = createTable();
             data.forEach(item => {
-                table.append(`<tr>
-                    <td>${item.product_name}</td>
-                    <td>${item.stock_quantity}</td>
-                    <td>${item.price}</td>
-                    <td>${item.department_name}</td>
-                    <td>
-                        <form>
-                            <input type="text" name="update_stock" placeholder="Example: 12" id="update-stock-value">
-                            <input type="submit" value="Update Stock" id="update-stock" data-item-id="${item.id}">
-                        </form>
-                    </td>
-                    <td>
-                        <form>
-                            <input type="text" name="update_price" placeholder="Example: 499.99" id="update-price-value">
-                            <input type="submit" value="Update Price" id="update-price" data-item-id="${item.id}">
-                        </form>
-                    </td>
-                </tr>`);
+                table.append(createProductRow(item));
             });
 
             display.append(table);
-        })
+        });
     }
 
     function showLowInventory() {
         emptyDisplay();
         updateButtons(2);
         $.get("/api/products").then(data => {
+            const table = createTable();
             data.forEach((item, index) => {
                 if (item.stock_quantity < 5) {
-                    display.append(`<div>
-                        <div><span class="mini">Product Name</span>${item.product_name}</div>
-                        <div><span class="mini">Quantity</span>${item.stock_quantity}</div>
-                        <div><span class="mini">Price</span>${item.price}</div>
-                        <div><span class="mini">Department</span>${item.department_name}</div>
-                        <hr>
-                        <form>
-                            <label for="update_stock">Update Stock</label>
-                            <input type="text" name="update_stock" id="update-stock-value">
-                            <input type="submit" value="Update Stock" id="update-stock" data-item-id="${item.id}">
-                        </form>
-                    </div>`);
-                }
+                    table.append(createProductRow(item));
+                };
             });
+
+            display.append(table);
         })
+    }
+
+    function createTable() {
+        return $(`<table>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Department</th>
+            <th>Update Stock</th>
+            <th>Update Price</th>
+        </table>`);
+    }
+
+    function createProductRow(item) {
+        return $(`<tr>
+            <td>${item.product_name}</td>
+            <td>${item.stock_quantity}</td>
+            <td>${item.price}</td>
+            <td>${item.department_name}</td>
+            <td>
+                <form>
+                    <input type="text" name="update_stock" placeholder="Example: 12" id="update-stock-value">
+                    <input type="submit" value="Update Stock" id="update-stock" data-item-id="${item.id}">
+                </form>
+            </td>
+            <td>
+                <form>
+                    <input type="text" name="update_price" placeholder="Example: 499.99" id="update-price-value">
+                    <input type="submit" value="Update Price" id="update-price" data-item-id="${item.id}">
+                </form>
+            </td>
+        </tr>`);
     }
 
     function addNewProduct() {
