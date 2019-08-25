@@ -9,6 +9,8 @@ $(document).ready(function () {
     $("#main-container").on("click", "#update-price", updatePrice);
     $("#main-container").on("click", ".add-new-product", addNewProductForm);
     $("#main-container").on("click", ".add-product", addProduct);
+    $("#main-container").on("click", ".delete-product", deleteProduct);
+    $("#main-container").on("click", ".cancel-product-add", removeAddProductRow);
 
     function showAllProducts() {
         emptyDisplay();
@@ -76,27 +78,30 @@ $(document).ready(function () {
     }
 
     function addNewProductForm() {
-        console.log("Adding new products form...");
-        const table = $("#table");
-        table.append(`<tr>
-            <td>
-                <input type="text" placeholder="Product name" id="new-product-name">
-            </td>
-            <td>
-                <input type="text" placeholder="Product quantity" id="new-product-quantity">
-            </td>
-            <td>
-                <input type="text" placeholder="Product price" id="new-product-price">
-            </td>
-            <td>
-                <input type="text" placeholder="Product department" id="new-product-department">
-            </td>
-            <td>N/A</td>
-            <td>N/A</td>
-            <td>
-                <i class="fas fa-check add-product"></i>
-            </td>
-        </tr>`);
+        // Will check to see if #add-product-row already exists
+        if (!$("#add-product-row").length) {
+            console.log("Adding new products form...");
+            const table = $("#table");
+            table.append(`<tr id="add-product-row">
+                <td>
+                    <input type="text" placeholder="Product name" id="new-product-name">
+                </td>
+                <td>
+                    <input type="text" placeholder="Product quantity" id="new-product-quantity">
+                </td>
+                <td>
+                    <input type="text" placeholder="Product price" id="new-product-price">
+                </td>
+                <td>
+                    <input type="text" placeholder="Product department" id="new-product-department">
+                </td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>
+                    <i class="fas fa-check add-product"></i><i class="fas fa-times cancel-product-add"></i>
+                </td>
+            </tr>`);
+        };
     }
 
     function addProduct() {
@@ -111,8 +116,15 @@ $(document).ready(function () {
             success: function () {
                 alert("Product added succesfully!");
                 window.location.reload();
+            },
+            error: function () {
+                alert("Product adding was failed, check your inputs.");
             }
         });
+    }
+
+    function removeAddProductRow() {
+        $("#add-product-row").remove();
     }
 
     function updateProductStock(event) {
