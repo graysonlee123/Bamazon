@@ -10,10 +10,10 @@ $(document).ready(function () {
 
     function showAllProducts() {
         emptyDisplay();
+        updateButtons(1);
         console.log("Showing all products...");
         $.get("/api/products").then(data => {
             data.forEach((item, index) => {
-                console.log(item);
                 display.append(`<div>
                     <div><span class="mini">Product Name</span>${item.product_name}</div>
                     <div><span class="mini">Quantity</span>${item.stock_quantity}</div>
@@ -25,20 +25,38 @@ $(document).ready(function () {
                         <input type="text" name="update_stock" id="update-stock-value">
                         <input type="submit" value="Update Stock" id="update-stock" data-item-id="${item.id}">
                     </form>
-</div>
-                `);
+                </div>`);
             });
         })
     }
 
     function showLowInventory() {
         emptyDisplay();
-        console.log("Showing low products...");
+        updateButtons(2);
+        $.get("/api/products").then(data => {
+            data.forEach((item, index) => {
+                if (item.stock_quantity < 5) {
+                    display.append(`<div>
+                        <div><span class="mini">Product Name</span>${item.product_name}</div>
+                        <div><span class="mini">Quantity</span>${item.stock_quantity}</div>
+                        <div><span class="mini">Price</span>${item.price}</div>
+                        <div><span class="mini">Department</span>${item.department_name}</div>
+                        <hr>
+                        <form>
+                            <label for="update_stock">Update Stock</label>
+                            <input type="text" name="update_stock" id="update-stock-value">
+                            <input type="submit" value="Update Stock" id="update-stock" data-item-id="${item.id}">
+                        </form>
+                    </div>`);
+                }
+            });
+        })
     }
 
     function addNewProduct() {
         emptyDisplay();
-        console.log("Adding new products");
+        updateButtons(3);
+        console.log("Adding new products form");
     }
 
     function updateStock(event) {
@@ -46,22 +64,15 @@ $(document).ready(function () {
         const quantity = $(this).parent().children("#update-stock-value").val();
         const itemId = $(this).attr("data-item-id");
         $.ajax({
-            url: '/api/products/' + itemId,
-            type: 'GET',
-            success: data => {
-                const newQuantity = data.stock_quantity - quantity;
-                $.ajax({
-                    url: '/api/products/' + itemId + '/quantity',
-                    type: 'PUT',
-                    data: `stock_quantity=${quantity}`,
-                    success: function (err) {
-                        if (err) return console.log(err);
-                        else {
-                            alert("Stock updated succesfully!");
-                            window.location.reload();
-                        };
-                    }
-                });
+            url: '/api/products/' + itemId + '/quantity',
+            type: 'PUT',
+            data: `stock_quantity=${quantity}`,
+            success: function (err) {
+                if (err) return console.log(err);
+                else {
+                    alert("Stock updated succesfully!");
+                    window.location.reload();
+                };
             }
         });
     }
@@ -69,5 +80,24 @@ $(document).ready(function () {
     function emptyDisplay() {
         console.log("Emptying display...");
         display.empty();
+    }
+
+    function updateButtons(activeButton = 1) {
+        console.log("Updating buttons");
+        const allButton = $("#all-products");
+        const lowButton = $("#low-inventory");
+        const addButton = $("#add-new");
+
+        allButton.removeAttr("disabled");
+        lowButton.removeAttr("disabled");
+        addButton.removeAttr("disabled");
+
+        if (activeButton === 1) {
+            allButton.attr("disabled", "");
+        } else if (activeButton === 2) {
+            lowButton.attr("disabled", "");
+        } else if (activeButton === 3) {
+            addButton.attr("disabled", "");
+        }
     }
 })
