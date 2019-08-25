@@ -30,6 +30,19 @@ module.exports = function(app) {
         });
     });
 
+    // Put requests for updating price
+    app.put("/api/products/:id/price", (req, res) => {
+        db.Product.update(req.body, {
+            where: {
+                id: req.params.id
+            }
+        }).then(function () {
+            res.end();
+        }).catch(function (err) {
+            res.json({message: err});
+        });
+    });
+
     // Post Requests
     app.post("/api/products", (req, res) => {
         console.log(req.body)

@@ -16,8 +16,7 @@ module.exports = function (sequelize, dataType) {
             type: dataType.DECIMAL(10, 2),
             allowNull: false,
             validate: {
-                min: 0,
-                msg: "Can't set a price less than 0!"
+                min: { args: [0], msg: "Must be numbers greater than 0!" }
             }
         },
         stock_quantity: {
