@@ -6,8 +6,9 @@ $(document).ready(function () {
     $("#all-products").on("click", showAllProducts);
     $("#low-inventory").on("click", showLowInventory);
     $("#add-new").on("click", addNewProduct);
-    $("#main-container").on("click", "#update-stock", updateStock);
+    $("#main-container").on("click", "#update-stock", updateProductStock);
     $("#main-container").on("click", "#update-price", updatePrice);
+    $("#main-container").on("click", ".delete-product", deleteProduct);
 
     function showAllProducts() {
         emptyDisplay();
@@ -47,11 +48,12 @@ $(document).ready(function () {
             <th>Department</th>
             <th>Update Stock</th>
             <th>Update Price</th>
+            <th>Remove Product</th>
         </table>`);
     }
 
     function createProductRow(item) {
-        return $(`<tr>
+        return $(`<tr data-product-id="${item.id}">
             <td>${item.product_name}</td>
             <td>${item.stock_quantity}</td>
             <td>${item.price}</td>
@@ -68,6 +70,7 @@ $(document).ready(function () {
                     <input type="submit" value="Update Price" id="update-price" data-item-id="${item.id}">
                 </form>
             </td>
+            <td><i class="fas fa-times delete-product"></i></td>
         </tr>`);
     }
 
@@ -77,7 +80,7 @@ $(document).ready(function () {
         console.log("Adding new products form");
     }
 
-    function updateStock(event) {
+    function updateProductStock(event) {
         event.preventDefault();
         const quantity = $(this).parent().children("#update-stock-value").val();
         const itemId = $(this).attr("data-item-id");
@@ -109,6 +112,22 @@ $(document).ready(function () {
                 if (err) return console.log(err);
                 else {
                     alert("Price updated succesfully!");
+                    window.location.reload();
+                };
+            }
+        });
+    }
+
+    function deleteProduct() {
+        const itemId = $(this).parent().parent().attr("data-product-id");
+        console.log("Removing item id: " + itemId);
+        $.ajax({
+            url: '/api/products/' + itemId + '/delete',
+            type: 'DELETE',
+            success: function (err) {
+                if (err) return console.log(err);
+                else {
+                    alert("Item was deleted succesfully!");
                     window.location.reload();
                 };
             }

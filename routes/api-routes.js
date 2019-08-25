@@ -48,4 +48,16 @@ module.exports = function(app) {
         console.log(req.body)
         db.Product.create(req.body).then(data => res.json({message: "Success!"}));
     });
+
+    // Delete requests for deleting item
+    app.delete("/api/products/:id/delete", (req, res) => {
+        console.log("Going to delete " + req.params.id);
+        db.Product.destroy({
+            where: {
+                id: req.params.id
+            }
+        }).then(function() {
+            res.end();
+        });
+    });
 }; 
