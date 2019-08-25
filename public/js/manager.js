@@ -5,10 +5,10 @@ $(document).ready(function () {
 
     $("#all-products").on("click", showAllProducts);
     $("#low-inventory").on("click", showLowInventory);
-    $("#add-new").on("click", addNewProduct);
     $("#main-container").on("click", "#update-stock", updateProductStock);
     $("#main-container").on("click", "#update-price", updatePrice);
-    $("#main-container").on("click", ".delete-product", deleteProduct);
+    $("#main-container").on("click", ".add-new-product", addNewProductForm);
+    $("#main-container").on("click", ".add-product", addProduct);
 
     function showAllProducts() {
         emptyDisplay();
@@ -22,6 +22,7 @@ $(document).ready(function () {
             });
 
             display.append(table);
+            display.append(`<i class="fas fa-plus-square add-new-product"></i>`)
         });
     }
 
@@ -41,14 +42,14 @@ $(document).ready(function () {
     }
 
     function createTable() {
-        return $(`<table>
+        return $(`<table id="table">
             <th>Product Name</th>
             <th>Quantity</th>
             <th>Price</th>
             <th>Department</th>
             <th>Update Stock</th>
             <th>Update Price</th>
-            <th>Remove Product</th>
+            <th>Actions</th>
         </table>`);
     }
 
@@ -74,10 +75,44 @@ $(document).ready(function () {
         </tr>`);
     }
 
-    function addNewProduct() {
-        emptyDisplay();
-        updateButtons(3);
-        console.log("Adding new products form");
+    function addNewProductForm() {
+        console.log("Adding new products form...");
+        const table = $("#table");
+        table.append(`<tr>
+            <td>
+                <input type="text" placeholder="Product name" id="new-product-name">
+            </td>
+            <td>
+                <input type="text" placeholder="Product quantity" id="new-product-quantity">
+            </td>
+            <td>
+                <input type="text" placeholder="Product price" id="new-product-price">
+            </td>
+            <td>
+                <input type="text" placeholder="Product department" id="new-product-department">
+            </td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>
+                <i class="fas fa-check add-product"></i>
+            </td>
+        </tr>`);
+    }
+
+    function addProduct() {
+        const name = $("#new-product-name").val();
+        const quantity = $("#new-product-quantity").val();
+        const price = $("#new-product-price").val();
+        const department = $("#new-product-department").val();
+        $.ajax({
+            url: '/api/products/',
+            type: 'POST',
+            data: { product_name: `${name}`, department_name: `${department}`, price: `${price}`, stock_quantity: `${quantity}`, image_file: "strangebed.jpg" },
+            success: function () {
+                alert("Product added succesfully!");
+                window.location.reload();
+            }
+        });
     }
 
     function updateProductStock(event) {
@@ -143,18 +178,14 @@ $(document).ready(function () {
         console.log("Updating buttons");
         const allButton = $("#all-products");
         const lowButton = $("#low-inventory");
-        const addButton = $("#add-new");
 
         allButton.removeAttr("disabled");
         lowButton.removeAttr("disabled");
-        addButton.removeAttr("disabled");
 
         if (activeButton === 1) {
             allButton.attr("disabled", "");
         } else if (activeButton === 2) {
             lowButton.attr("disabled", "");
-        } else if (activeButton === 3) {
-            addButton.attr("disabled", "");
-        }
+        };
     }
-})
+});
