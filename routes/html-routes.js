@@ -12,4 +12,8 @@ module.exports = function (app) {
     app.get("/product", function (req, res) {
         res.sendFile(path.join(__dirname, "../public/product.html"));
     });
+
+    app.get("/manager", function (req, res) {
+        res.sendFile(path.join(__dirname, "../public/manager.html"));
+    });
 };

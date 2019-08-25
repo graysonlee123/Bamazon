@@ -83,11 +83,7 @@ $(document).ready(function () {
     }
 
     function submitOrder() {
-        console.log(itemsInCart);
-        console.log(cart);
         if (itemsInCart) {
-            console.log("Submitting order...");
-            console.log(cart);
             cart.forEach((item, index) => {
                 $.ajax({
                     url: '/api/products/' + item.id,
@@ -104,7 +100,7 @@ $(document).ready(function () {
                                     alert("Price updated succesfully! You were charged: " + total);
                                     clearCart();
                                     window.location.href = "/"
-                                }
+                                };
                             }
                         });
                     }

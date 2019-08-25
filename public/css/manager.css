@@ -1,0 +1,38 @@
+.layout {
+    display: grid;
+    grid-template:
+        "navigation"
+        "main"
+        "footer";
+    grid-template-rows: 80px 1fr 80px;
+    grid-template-columns: 1fr;
+    grid-gap: 0;
+    height: 100vh;
+}
+
+.nav {
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.list {
+    list-style: none;
+}
+
+.list * {
+    display: inline;
+}
+
+.list *:not(:last-child) {
+    margin-right: 16px;
+}
+
+/* Footer */
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
