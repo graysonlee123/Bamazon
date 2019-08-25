@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const url = window.location.search;
     let productId = null;
 
@@ -13,6 +14,7 @@ $(document).ready(function () {
         renderProduct(productId);
     };
 
+    // Render all of the products to the page
     function renderProduct(productId) {
         $.get("/api/products/" + productId).then(product => {
             console.log("Product pre process:");
@@ -22,11 +24,40 @@ $(document).ready(function () {
             $("#price").text(product.price);
             $("#department").text(product.department_name);
             $("#image").attr('src', '/images/products/' + product.image_file);
+
+            // Check the stock of the item, and only allow the user
+            // to choose from what is available
+            $.ajax({
+                url: "/api/products/" + productId,
+                method: "GET",
+                success: function(product) {
+                    const quantity = product.stock_quantity;
+                    const stockWarnElement = $("#out-of-stock-warning");
+
+                    // if (quantity <= 0) {
+                    //     stockWarnElement.text("Out of Stock!");
+                    //     $("#quantity").delete();
+                    // } else {
+                    //     if (quantity >= 1) {
+                    //         $("#select-one").removeAttr("disabled");
+                    //     };
+                    //     if (quantity >= 2) {
+                    //         $("#select-two").removeAttr("disabled");
+                    //     };
+                    //     if (quantity >= 3) {
+                    //         $("#select-three").removeAttr("disabled");
+                    //     };
+                    // };
+                    for (let i = 1, j = 1; i <= quantity && j <= 5; i ++, j++ ) {
+                        $("#quantity").append(`<option>${i}</option>`);
+                    }
+                }
+            })
         });
     }
 
+    // Check the user's cart in order to see if they already have the item added
     function checkCart() {
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
         let alreadyInCart = false;
         if (cart) {
             cart.forEach(item => {
@@ -36,6 +67,7 @@ $(document).ready(function () {
                 };
             });
         };
+
         if (alreadyInCart === false) addToCart(cart);
     }
 
