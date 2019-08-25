@@ -90,10 +90,11 @@ $(document).ready(function () {
                     type: 'GET',
                     success: data => {
                         const newQuantity = data.stock_quantity - item.quantity;
+                        const newProductSales = parseFloat(data.product_sales) + item.quantity * data.price;
                         $.ajax({
                             url: '/api/products/' + data.id + '/quantity',
                             type: 'PUT',
-                            data: `stock_quantity=${newQuantity}`,
+                            data: { stock_quantity: newQuantity, product_sales: newProductSales },
                             success: function (err) {
                                 if (err) return console.log(err);
                                 else {

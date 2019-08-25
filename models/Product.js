@@ -25,6 +25,14 @@ module.exports = function (sequelize, dataType) {
             validate: {
                 min: { args: [0], msg: "Pick 0-100 please" }
             }
+        },
+        product_sales: {
+            type: dataType.DECIMAL(10, 2),
+            allowNull: false,
+            defaultValue: 0.00,
+            validate: {
+                isDecimal: true
+            }
         }
     });
 };
