@@ -39,6 +39,9 @@ $(document).ready(function () {
                         $("#quantity").remove();
                         $("#submit").attr("disabled", "");
                     } else {
+                        if (quantity < 5) {
+                            $(".low-quantity").text("Low Quantity!");
+                        }
                         for (let i = 1, j = 1; i <= quantity && j <= 5; i++ , j++) {
                             $("#quantity").append(`<option>${i}</option>`);
                         };

@@ -21,14 +21,17 @@
 <body>
     <i class="fas fa-long-arrow-alt-left" id="products-exit"></i>
 
-    <div id="product-div">
-        <span id="name">Product loading...</span>
-        <span>Price: <span id="price"></span></span>
-        <span>Department: <span id="department"></span></span>
-        <img id="image">
-        <div id="out-of-stock-warning"></div>
-        <select name="quantity" id="quantity"></select>
-        <input type="submit" id="submit" value="Add to Cart">
+    <div class="product-container">
+        <img id="image" src="/images/products/${product.image_file}">
+        <div class="product-text-container">
+            <h2 class="large-font name" id="name"></h2>
+            <p class="department" id="department">${product.department_name}</p>
+            <p class="price" id="price"></p>
+            <div id="out-of-stock-warning"></div>
+            <select name="quantity" id="quantity"></select>
+            <input type="submit" id="submit" value="Add to Cart">
+            <span class="main-body-font low-quantity"></span>
+        </div>
     </div>
 
     <script src="js/product.js"></script>

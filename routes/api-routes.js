@@ -100,11 +100,10 @@ module.exports = function (app) {
             where: {
                 id: req.params.id
             }
-        }).then(function () {
-            res.end();
-        }).catch(function (err) {
-            res.json({ message: err });
-        });
+        }).then(data => {
+            if (data) res.json(data);
+            else res.status(404).json({ message: "Not Valid!" });
+        })
     });
 
     // Delete requests for deleting item

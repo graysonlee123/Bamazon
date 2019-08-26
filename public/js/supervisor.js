@@ -134,6 +134,7 @@ $(document).ready(function () {
         openOverlay();
     }
 
+    // This function sends the put data
     function handleSubmitEdit() {
         event.preventDefault();
         const data = {

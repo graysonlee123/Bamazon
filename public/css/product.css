@@ -11,8 +11,9 @@ body {
     width: 600px;
     min-height: 200px;
     background: white;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.2);
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
 
     display: flex;
     flex-flow: column nowrap;
@@ -23,6 +24,11 @@ body {
     object-fit: cover;
     width: 100%;
     height: auto;
+    margin-bottom: 16px;
+}
+
+#quantity {
+    margin-top: 20px;
 }
 
 #products-exit {
@@ -37,4 +43,8 @@ body {
 
 #products-exit:hover {
     opacity: 0.75;
+}
+
+.text-container {
+    margin: 10px;
 }
