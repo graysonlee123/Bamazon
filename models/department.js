@@ -20,5 +20,4 @@ module.exports = function (sequelize, dataType) {
     }
 
     return Department;
-
 };

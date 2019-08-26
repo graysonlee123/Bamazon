@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,14 +14,28 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
+
 <body>
+    <div id="overlay">
+        <i class= "fas fa-times exit-overlay"></i>
+        <form action="" id="form"></form>
+    </div>
+
     <div class="layout">
         <nav class="nav">
             <a href="/">Home</a>
         </nav>
-        
-        <div id="main-container">
 
+        <div id="main-container">
+            <table>
+                <th>Department Name</th>
+                <th>Department ID</th>
+                <th>Overhead Costs</th>
+                <th>Product Sales</th>
+                <th>Total Profit</th>
+                <th>Actions</th>
+            </table>
+            <button class="add"> <i class="fas fa-plus"></i> </button>
         </div>
 
         <footer class="footer">
@@ -30,4 +45,5 @@
 
     <script src="js/supervisor.js"></script>
 </body>
+
 </html>
