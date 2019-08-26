@@ -50,7 +50,7 @@
     align-items: center;
 }
 
-.exit-overlay {
+button.cancel {
     position: fixed;
     top: 20px;
     left: 20px;

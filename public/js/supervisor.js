@@ -7,6 +7,8 @@ $(document).ready(function () {
     const overlay = $("#overlay");
     // Grab the table element
     const table = $("table");
+    // Grab the overlay form
+    const form = $("#form");
     // Flag for setting the department ID to update
     let selectedDepartmentId = null;
     // Get all departments to start off
@@ -15,8 +17,11 @@ $(document).ready(function () {
     // Click handlers
     $(document).on("click", "button.delete", handleDelete);
     $(document).on("click", "button.add", handleAdd);
+    $(document).on("click", "button.submit-add", handleSubmitAdd);
     $(document).on("click", "button.edit", handleEdit);
+    $(document).on("click", "button.submit-edit", handleSubmitEdit);
     $(document).on("click", "button.cancel", handleCancel);
+
 
     getDepartments();
 
@@ -63,7 +68,8 @@ $(document).ready(function () {
 
     // This function will post a new department
     function postDepartment(data) {
-        if (!data) return console.log("No data provided for postDepartment()!")
+        if (!data) return console.log("No data provided for postDepartment()!");
+        console.log("Data to post: ", data);
         $.ajax({
             url: '/api/departments',
             type: 'POST',
@@ -71,9 +77,21 @@ $(document).ready(function () {
             success: function () {
                 alert("Department added succesfully!");
                 window.location.reload();
-            },
-            error: function () {
-                alert("Department adding was failed, check your inputs.");
+            }
+        });
+    }
+
+    // This function will update an existing department
+    function putDepartment(data) {
+        if (!data) return console.log("No data provided for putDepartment()!");
+        console.log("Data to put: ", data);
+        $.ajax({
+            url: '/api/departments/id/' + selectedDepartmentId,
+            type: 'PUT',
+            data: { department_name: data.name, over_head_costs: data.overhead, id: selectedDepartmentId },
+            success: function () {
+                alert("Department edited succesfully!");
+                window.location.reload();
             }
         });
     }
@@ -83,24 +101,55 @@ $(document).ready(function () {
     // This function will handle the delete button
     function handleDelete() {
         const id = $(this).parent().parent().attr("data-department-id");
-        if (confirm("Are you sure you want to delete department " + id + "?")) {
-            alert("Department removed!");
+        if (confirm("Are you sure you want to delete department " + id + "? \nThis will delete ALL corresponding products!")) {
             deleteDepartment(id);
         };
     }
 
-    // This button will handle the add button
+    // This function will handle the add button
     function handleAdd() {
-        console.log("Handle add");
+        form.empty();
+        renderDepartmentForm("add");
+        openOverlay();
+    }
+
+    // This function will get the form data and post a new department
+    function handleSubmitAdd(event) {
+        event.preventDefault();
+        const data = {
+            name: $("input.name").val(),
+            overhead: $("input.overhead").val()
+        };
+
+        postDepartment(data);
     }
 
     // This function will handle the edit button
     function handleEdit() {
         console.log("Handle edit");
+        form.empty();
+        // Goes to find the row, and look at the id column
+        selectedDepartmentId = $(this).parent().parent().children(".department-id").text();
+        renderDepartmentForm("edit");
+        openOverlay();
+    }
+
+    function handleSubmitEdit() {
+        event.preventDefault();
+        const data = {
+            name: $("input.name").val(),
+            overhead: $("input.overhead").val()
+        };
+
+        if (!data.name || !data.overhead) {
+            return console.log("Bad data");
+        } else putDepartment(data);
     }
 
     function handleCancel() {
         console.log("Handling cancel overlay...");
+        form.empty();
+        closeOverlay();
     }
 
     // Generic functions
@@ -128,7 +177,7 @@ $(document).ready(function () {
             const total = getDepartmentTotal(department);
             table.append(`<tr data-department-id="${department.id}">
                 <td>${department.department_name}</td>
-                <td>${department.id}</td>
+                <td class="department-id">${department.id}</td>
                 <td>\$${department.over_head_costs}</td>
                 <td>\$${total}</td>
                 <td>\$${total - department.over_head_costs}</td>
@@ -141,14 +190,27 @@ $(document).ready(function () {
     }
 
     // This function will render the overlay for overlay forms
-    function renderNewDepartmentForm() {
-        selectedDepartmentId = $(this).parent().parent().attr("data-department-id");
-        const form = $("#form");
-        form.empty();
-        form.append(`<label>Overhead Costs</label>
-        <input type="text", placeholder="Ex: 200.00">
-        <input id="submit-changes" type="button" value="Submit Changes" data-department-id="${selectedDepartmentId}">`);
+    function renderDepartmentForm(className) {
+        form.append(`
+        <label>Department Name</label>
+        <input class="name" type="text" placeholder="Example: Furniture">
+        <br>
+        <label>Overhead Costs</label>
+        <input class="overhead" type="text" placeholder="Ex: 200.00">
+        <br>
+        <button type="submit" class="submit-${className}">Add Product</button>
+        `);
     }
+
+    // function renderEditDepartmentForm() {
+    //     form.append(`
+    //     <label>Department Name</label>
+    //     <input class="name" type="text" placeholder="Ex: Furniture"
+    //     <br>
+    //     <label>Overhead Costs</label>
+    //     <input class="
+    //     `)
+    // }
 
     // This function opens the overlay
     function openOverlay() {

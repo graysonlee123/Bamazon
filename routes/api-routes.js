@@ -81,8 +81,9 @@ module.exports = function (app) {
 
     // add departments
     app.post("/api/departments", (req, res) => {
-        console.log(req.body);
-        db.Department.create(req.body).then(data => res.json({ message: "Success!" }));
+        db.Department.create(req.body).then(data => {
+            if (data) res.json({ message: "Success!" })
+        });
     });
 
     // Get all departments by ID
@@ -91,6 +92,19 @@ module.exports = function (app) {
             if (data) res.json(data)
             else res.status(404).json({ message: "Not Found" });
         })
+    });
+
+    // Update existing departments
+    app.put("/api/departments/id/:id", (req, res) => {
+        db.Department.update(req.body, {
+            where: {
+                id: req.params.id
+            }
+        }).then(function () {
+            res.end();
+        }).catch(function (err) {
+            res.json({ message: err });
+        });
     });
 
     // Delete requests for deleting item

@@ -3,10 +3,16 @@ module.exports = function (sequelize, dataType) {
         department_name: {
             type: dataType.STRING,
             allowNull: false,
+            validate: {
+                len: [1, 20]
+            }
         },
         over_head_costs: {
             type: dataType.DECIMAL(10, 2),
             allowNull: false,
+            validate: {
+                isDecimal: true
+            }
         }
     });
 
