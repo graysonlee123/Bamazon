@@ -6,7 +6,11 @@ module.exports = function (sequelize, dataType) {
         },
         department_name: {
             type: dataType.STRING,
-            allowNull: false,
+            allowNull: false
+        },
+        departmentId: {
+            type: dataType.INTEGER,
+            allowNull: false
         },
         image_file: {
             type: dataType.STRING,

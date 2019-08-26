@@ -1,5 +1,5 @@
 module.exports = function (sequelize, dataType) {
-    return sequelize.define("Department", {
+    const Department = sequelize.define("Department", {
         department_name: {
             type: dataType.STRING,
             allowNull: false,
@@ -9,4 +9,16 @@ module.exports = function (sequelize, dataType) {
             allowNull: false,
         }
     });
+
+    Department.associate = models => {
+        Department.hasMany(models.Product, {
+            onDelete: "CASCADE",
+            foreignKey: {
+                allowNull: false
+            }
+        })
+    }
+
+    return Department;
+
 };

@@ -105,7 +105,7 @@ $(document).ready(function () {
             </tr>`);
             $.get("/api/departments", function(departments) {
                 departments.forEach(department => {
-                    $("#new-product-department").append(`<option>${department.department_name}</option>`)
+                    $("#new-product-department").append(`<option value="${department.id}, ${department.department_name}">${department.department_name}</option>`)
                 });
             });
         };
@@ -115,11 +115,15 @@ $(document).ready(function () {
         const name = $("#new-product-name").val();
         const quantity = $("#new-product-quantity").val();
         const price = $("#new-product-price").val();
-        const department = $("#new-product-department").val();
+        let departmentInfo = $("#new-product-department").val();
+        departmentInfo = departmentInfo.split(", ");
+        const departmentName = departmentInfo[1];
+        const departmentId = departmentInfo[0];
+        console.log(departmentInfo);
         $.ajax({
             url: '/api/products/',
             type: 'POST',
-            data: { product_name: `${name}`, department_name: `${department}`, price: `${price}`, stock_quantity: `${quantity}`, image_file: "strangebed.jpg" },
+            data: { product_name: name, department_name: departmentName, DepartmentId: departmentId, price: price, stock_quantity: quantity, image_file: "strangebed.jpg" },
             success: function () {
                 alert("Product added succesfully!");
                 window.location.reload();
