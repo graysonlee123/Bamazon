@@ -104,9 +104,15 @@ $(document).ready(function () {
                 </td>
             </tr>`);
             $.get("/api/departments", function(departments) {
-                departments.forEach(department => {
-                    $("#new-product-department").append(`<option value="${department.id}, ${department.department_name}">${department.department_name}</option>`)
-                });
+                console.log(departments);
+                if (departments.length === 0) {
+                    console.log("No departments detected!");
+                    $("#new-product-department").append(`<option disabled>No Departments!</option>`)
+                } else {
+                    departments.forEach(department => {
+                        $("#new-product-department").append(`<option value="${department.id}, ${department.department_name}">${department.department_name}</option>`)
+                    });
+                }
             });
         };
     }
@@ -128,7 +134,7 @@ $(document).ready(function () {
                 alert("Product added succesfully!");
                 window.location.reload();
             },
-            error: function () {
+            fail: function () {
                 alert("Product adding was failed, check your inputs.");
             }
         });

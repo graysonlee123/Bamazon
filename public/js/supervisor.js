@@ -14,11 +14,11 @@ $(document).ready(function () {
         emptyDisplay();
         console.log("Showing all departments...");
 
-        $.get("/api/departments").then(data => {
-            console.log(data);
+        $.get("/api/departments").then(departments => {
+            console.log(departments);
             const table = createTable();
-            data.forEach(item => {
-                table.append(createDepartmentRow(item));
+            departments.forEach(department => {
+                table.append(createDepartmentRow(department));
             });
 
             display.append(table);
@@ -37,31 +37,21 @@ $(document).ready(function () {
         </table>`);
     }
 
-    function createDepartmentRow(item) {
-        let totalSales = 0;
-        console.log("Creating row...");
+    function createDepartmentRow(department) {
+        let departmentTotal = 0;
 
-        return $(`<tr data-department-id="${item.id}">
-            <td>${item.department_name}</td>
-            <td>${item.id}</td>
-            <td>\$${item.over_head_costs}</td>
-            <td>\$coming later</td>
-            <td>\$10</td>
+        department.Products.forEach(product => {
+            departmentTotal += parseFloat(product.product_sales);
+        });
+
+        return $(`<tr data-department-id="${department.id}">
+            <td>${department.department_name}</td>
+            <td>${department.id}</td>
+            <td>\$${department.over_head_costs}</td>
+            <td>\$${departmentTotal}</td>
+            <td>\$${departmentTotal - department.over_head_costs}</td>
             <td><i class="fas fa-times delete-department"></i></td>
         </tr>`);
-
-        $.ajax({
-            url: "/api/products",
-            method: "GET",
-            success: function (departments) {
-                departments.forEach(department => {
-                    console.log(department);
-                    console.log(totalSales);
-                    console.log(department.product_sales);
-                    totalSales += parseInt(item.product_sales);
-                });
-            }
-        })
     }
 
     function addNewDepartmentForm() {
@@ -97,7 +87,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/api/departments',
             type: 'POST',
-            data: { department_name: `${name}`, over_head_costs: `${overhead}` },
+            data: { department_name: name, over_head_costs: overhead },
             success: function () {
                 alert("Department added succesfully!");
                 window.location.reload();

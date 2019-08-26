@@ -17,6 +17,14 @@ module.exports = function(app) {
         });
     });
 
+    // Get all products by department
+    app.get("/api/products/department/:id", (req, res) => {
+        db.Product.findAll({ where: { DepartmentId: req.params.id }}).then(data => {
+            if (data) res.json(data)
+            else res.status(404).json( { message: "Not Found" } );
+        });
+    });
+
     // Put requests for updating quantity
     app.put("/api/products/:id/quantity", (req, res) => {
         db.Product.update(req.body, {
@@ -65,7 +73,7 @@ module.exports = function(app) {
 
     // Get all departments
     app.get("/api/departments", (req, res) => {
-        db.Department.findAll({}).then(data => {
+        db.Department.findAll({include: [db.Product]}).then(data => {
             if (data) res.json(data)
             else res.status(404).json( { message: "Not Found" } );
         })
