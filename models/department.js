@@ -4,7 +4,7 @@ module.exports = function (sequelize, dataType) {
             type: dataType.STRING,
             allowNull: false,
         },
-        price: {
+        over_head_costs: {
             type: dataType.DECIMAL(10, 2),
             allowNull: false,
         }

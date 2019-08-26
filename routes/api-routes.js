@@ -60,4 +60,32 @@ module.exports = function(app) {
             res.end();
         });
     });
+
+    // Departments
+
+    // Get all departments
+    app.get("/api/departments", (req, res) => {
+        db.Department.findAll({}).then(data => {
+            if (data) res.json(data)
+            else res.status(404).json( { message: "Not Found" } );
+        })
+    });
+
+    // add departments
+    app.post("/api/departments", (req, res) => {
+        console.log(req.body);
+        db.Department.create(req.body).then(data => res.json({message: "Success!"}));
+    });
+
+    // Delete requests for deleting item
+    app.delete("/api/departments/:id/delete", (req, res) => {
+        console.log("Going to delete " + req.params.id);
+        db.Department.destroy({
+            where: {
+                id: req.params.id
+            }
+        }).then(function() {
+            res.end();
+        });
+    });
 }; 
