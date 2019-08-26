@@ -93,7 +93,9 @@ $(document).ready(function () {
                     <input type="text" placeholder="Product price" id="new-product-price">
                 </td>
                 <td>
-                    <input type="text" placeholder="Product department" id="new-product-department">
+                    <select id="new-product-department">
+                        
+                    </select>
                 </td>
                 <td>N/A</td>
                 <td>N/A</td>
@@ -101,6 +103,11 @@ $(document).ready(function () {
                     <i class="fas fa-check add-product"></i><i class="fas fa-times cancel-product-add"></i>
                 </td>
             </tr>`);
+            $.get("/api/departments", function(departments) {
+                departments.forEach(department => {
+                    $("#new-product-department").append(`<option>${department.department_name}</option>`)
+                });
+            });
         };
     }
 
