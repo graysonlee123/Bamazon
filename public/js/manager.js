@@ -27,15 +27,13 @@ $(document).ready(function () {
 
     // These functions handle the AJAX requests
 
-    // This function will get all departments by default, or only the
+    // This function will get all products by default, or only the
     // department specified by the ID passed into the function
     function getProducts(id) {
         // Sets the query if an ID is provided
         let idQuery = id || "";
         if (id) {
             idQuery = "/id/" + id;
-            console.log(idQuery);
-            console.log("/api/departments%s", idQuery);
         };
         // If no id was passed, it will be an empty string,
         // and just query all products
@@ -95,7 +93,8 @@ $(document).ready(function () {
         });
     }
 
-    // This function gets all the available departments
+    // This function gets all the available products,
+    // for listing on the edit products overlay
     function getDepartments() {
         $.get("/api/departments").then(departmentsData => {
             departments = departmentsData;
@@ -160,14 +159,14 @@ $(document).ready(function () {
         const data = {
             product_name: $("input.name").val(),
             department_name: departmentData[0],
-            departmentId: departmentData[1],
+            DepartmentId: departmentData[1],
             price: $("input.price").val(),
             stock_quantity: $("input.stock").val(),            
         };
 
         console.log("data collected to submit: ", data);
 
-        if (!data.product_name || !data.department_name || !data.departmentId || !data.price || !data.stock_quantity ) {
+        if (!data.product_name || !data.department_name || !data.DepartmentId || !data.price || !data.stock_quantity ) {
             return console.log("Bad data");
         } else putProduct(data);
     }
@@ -181,9 +180,10 @@ $(document).ready(function () {
 
     // This function will handle the delete button
     function handleDelete() {
-        const id = $(this).parent().parent().attr("data-department-id");
-        if (confirm("Are you sure you want to delete department " + id + "? \nThis will delete ALL corresponding products!")) {
-            deleteDepartment(id);
+        const id = $(this).parent().parent().children(".product-id").text();
+        const name = $(this).parent().parent().children(".product-name").text();
+        if (confirm("Are you sure you want to delete product " + name + "?")) {
+            deleteProduct(id);
         };
     }
 
@@ -198,8 +198,8 @@ $(document).ready(function () {
                 <td class="product-id">${item.id}</td>
                 <td class="product-quantity">${item.stock_quantity}</td>
                 <td class="product-price">${item.price}</td>
-                <td class="product-department">${item.department_name}</td>
-                <td class="product-department-id">${item.DepartmentId}</td>
+                <td class="product-department">${item.Department.department_name}</td>
+                <td class="product-department-id">${item.Department.id}</td>
                 <td>
                     <button class="edit"> <i class="fas fa-edit"></i> </button>
                     <button class="delete"> <i class="fas fa-times"></i> </button>
@@ -248,164 +248,5 @@ $(document).ready(function () {
     // This function closes the overlay
     function closeOverlay() {
         overlay.css("display", "none");
-    }
-
-    // These are OLD FUNCTIONS
-
-    function createProductRow(item) {
-        return $(`<tr data-product-id="${item.id}">
-            <td>${item.product_name}</td>
-            <td>${item.stock_quantity}</td>
-            <td>${item.price}</td>
-            <td>${item.department_name}</td>
-            <td>
-                <form>
-                    <input type="text" name="update_stock" placeholder="Example: 12" id="update-stock-value">
-                    <input type="submit" value="Update Stock" id="update-stock" data-item-id="${item.id}">
-                </form>
-            </td>
-            <td>
-                <form>
-                    <input type="text" name="update_price" placeholder="Example: 499.99" id="update-price-value">
-                    <input type="submit" value="Update Price" id="update-price" data-item-id="${item.id}">
-                </form>
-            </td>
-            <td><i class="fas fa-times delete-product"></i></td>
-        </tr>`);
-    }
-
-    function addNewProductForm() {
-        // Will check to see if #add-product-row already exists
-        if (!$("#add-product-row").length) {
-            console.log("Adding new products form...");
-            table.append(`<tr id="add-product-row">
-                <td>
-                    <input type="text" placeholder="Product name" id="new-product-name">
-                </td>
-                <td>
-                    <input type="text" placeholder="Product quantity" id="new-product-quantity">
-                </td>
-                <td>
-                    <input type="text" placeholder="Product price" id="new-product-price">
-                </td>
-                <td>
-                    <select id="new-product-department">
-                        
-                    </select>
-                </td>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>
-                    <i class="fas fa-check add-product"></i><i class="fas fa-times cancel-product-add"></i>
-                </td>
-            </tr>`);
-            $.get("/api/departments", function (departments) {
-                console.log(departments);
-                if (departments.length === 0) {
-                    console.log("No departments detected!");
-                    $("#new-product-department").append(`<option disabled>No Departments!</option>`)
-                } else {
-                    departments.forEach(department => {
-                        $("#new-product-department").append(`<option value="${department.id}, ${department.department_name}">${department.department_name}</option>`)
-                    });
-                }
-            });
-        };
-    }
-
-    function addProduct() {
-        const name = $("#new-product-name").val();
-        const quantity = $("#new-product-quantity").val();
-        const price = $("#new-product-price").val();
-        let departmentInfo = $("#new-product-department").val();
-        departmentInfo = departmentInfo.split(", ");
-        const departmentName = departmentInfo[1];
-        const departmentId = departmentInfo[0];
-        console.log(departmentInfo);
-        $.ajax({
-            url: '/api/products/',
-            type: 'POST',
-            data: { product_name: name, department_name: departmentName, DepartmentId: departmentId, price: price, stock_quantity: quantity, image_file: "strangebed.jpg" },
-            success: function () {
-                alert("Product added succesfully!");
-                window.location.reload();
-            },
-            fail: function () {
-                alert("Product adding was failed, check your inputs.");
-            }
-        });
-    }
-
-    function removeAddProductRow() {
-        $("#add-product-row").remove();
-    }
-
-    function updateProductStock(event) {
-        event.preventDefault();
-        const quantity = $(this).parent().children("#update-stock-value").val();
-        const itemId = $(this).attr("data-item-id");
-        $.ajax({
-            url: '/api/products/' + itemId + '/quantity',
-            type: 'PUT',
-            data: `stock_quantity=${quantity}`,
-            success: function (err) {
-                if (err) return console.log(err);
-                else {
-                    alert("Stock updated succesfully!");
-                    window.location.reload();
-                };
-            }
-        });
-    }
-
-    function updatePrice(event) {
-        event.preventDefault();
-        const price = $(this).parent().children("#update-price-value").val();
-        const itemId = $(this).attr("data-item-id");
-        console.log("Updating price...");
-        console.log(price);
-        $.ajax({
-            url: '/api/products/' + itemId + '/price',
-            type: 'PUT',
-            data: `price=${price}`,
-            success: function (err) {
-                if (err) return console.log(err);
-                else {
-                    alert("Price updated succesfully!");
-                    window.location.reload();
-                };
-            }
-        });
-    }
-
-    function deleteProduct() {
-        const itemId = $(this).parent().parent().attr("data-product-id");
-        console.log("Removing item id: " + itemId);
-        $.ajax({
-            url: '/api/products/' + itemId + '/delete',
-            type: 'DELETE',
-            success: function (err) {
-                if (err) return console.log(err);
-                else {
-                    alert("Item was deleted succesfully!");
-                    window.location.reload();
-                };
-            }
-        });
-    }
-
-    function updateButtons(activeButton = 1) {
-        console.log("Updating buttons");
-        const allButton = $("#all-products");
-        const lowButton = $("#low-inventory");
-
-        allButton.removeAttr("disabled");
-        lowButton.removeAttr("disabled");
-
-        if (activeButton === 1) {
-            allButton.attr("disabled", "");
-        } else if (activeButton === 2) {
-            lowButton.attr("disabled", "");
-        };
     }
 });

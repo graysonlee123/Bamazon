@@ -34,7 +34,7 @@ $(document).ready(function () {
     }
 
     function buildListItems(item) {
-        $.get("/api/products/" + item.id).then(product => {
+        $.get("/api/products/id/" + item.id).then(product => {
             product.userPurchaseQuantity = item.quantity;
 
             calculateTotal(product.price * product.userPurchaseQuantity);
@@ -91,7 +91,7 @@ $(document).ready(function () {
         if (itemsInCart) {
             cart.forEach((item, index) => {
                 $.ajax({
-                    url: '/api/products/' + item.id,
+                    url: '/api/products/id/' + item.id,
                     type: 'GET',
                     success: data => {
                         const newQuantity = data.stock_quantity - item.quantity;
@@ -103,7 +103,7 @@ $(document).ready(function () {
                             success: function (err) {
                                 if (err) return console.log(err);
                                 else {
-                                    alert("Price updated succesfully! You were charged: " + total);
+                                    alert("Price updated succesfully! You were charged: $" + parseFloat(total));
                                     clearCart();
                                     window.location.href = "/"
                                 };
