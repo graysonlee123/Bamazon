@@ -9,6 +9,8 @@ $(document).ready(function () {
     const form = $("#form");
     // Sets flag for products found in getProducts()
     let products = null;
+    // Sets a flag for the selected product ID when editing 
+    let selectedProductId = null;
     // Sets a variable for all departments found in getDepartments()
     let departments = null;
     // By default, get all products and departments
@@ -16,8 +18,11 @@ $(document).ready(function () {
     getDepartments();
 
     // Click handlers
+    $(document).on("click", "button.delete", handleDelete);
     $(document).on("click", "button.add", handleAdd);
     $(document).on("click", "button.submit-add", handleSubmitAdd);
+    $(document).on("click", "button.edit", handleEdit);
+    $(document).on("click", "button.submit-edit", handleSubmitEdit);
     $(document).on("click", "button.cancel", handleCancel);
 
     // These functions handle the AJAX requests
@@ -97,7 +102,6 @@ $(document).ready(function () {
     function handleSubmitAdd(event) {
         event.preventDefault();
         let departmentInfo = $("select.department").val().split(", ");
-        console.log("Split: ", departmentInfo);
         const data = {
             product_name: $("input.name").val(),
             department_name: departmentInfo[0],
@@ -111,11 +115,52 @@ $(document).ready(function () {
         postProduct(data);
     }
 
+    // This function will handle the edit button
+    function handleEdit() {
+        console.log("Handle edit");
+        form.empty();
+        // Goes to find the row, and look at the id column
+        selectedProductId = $(this).parent().parent().children(".product-id").text();
+        // Creates a data object based on the table to autofill the edit form
+        const autofillData = {
+            name: $(this).parent().parent().children(".product-name").text(),
+            stock: $(this).parent().parent().children(".product-quantity").text(),
+            price: $(this).parent().parent().children(".product-price").text(),
+            department: $(this).parent().parent().children(".product-department").text(),
+            departmentId: $(this).parent().parent().children(".product-department-id").text(),
+        };
+        console.log("Seleced id: ", selectedProductId);
+        console.log("Form data: ", autofillData);
+        renderProductForm("edit", autofillData);
+        openOverlay();
+    }
+
+    // This function sends the put data
+    function handleSubmitEdit() {
+        event.preventDefault();
+        const data = {
+            name: $("input.name").val(),
+            overhead: $("input.overhead").val()
+        };
+
+        if (!data.name || !data.overhead) {
+            return console.log("Bad data");
+        } else putProduct(data);
+    }
+
     // This function handles the cancel button on the overlay
     function handleCancel() {
         console.log("Handling cancel overlay...");
         form.empty();
         closeOverlay();
+    }
+
+    // This function will handle the delete button
+    function handleDelete() {
+        const id = $(this).parent().parent().attr("data-department-id");
+        if (confirm("Are you sure you want to delete department " + id + "? \nThis will delete ALL corresponding products!")) {
+            deleteDepartment(id);
+        };
     }
 
     // These are generic functions 
@@ -125,14 +170,15 @@ $(document).ready(function () {
         products.forEach(item => {
             table.append(`
             <tr>
-                <td>${item.product_name}</td>
-                <td>${item.id}</td>
-                <td>${item.stock_quantity}</td>
-                <td>${item.price}</td>
-                <td>${item.department_name}</td>
+                <td class="product-name">${item.product_name}</td>
+                <td class="product-id">${item.id}</td>
+                <td class="product-quantity">${item.stock_quantity}</td>
+                <td class="product-price">${item.price}</td>
+                <td class="product-department">${item.department_name}</td>
+                <td class="product-department-id">${item.DepartmentId}</td>
                 <td>
-                    <button> <i class="fas fa-edit"></i> </button>
-                    <button> <i class="fas fa-times"></i> </button>
+                    <button class="edit"> <i class="fas fa-edit"></i> </button>
+                    <button class="delete"> <i class="fas fa-times"></i> </button>
                 </td>
             </tr>
             `);
@@ -140,7 +186,7 @@ $(document).ready(function () {
     }
 
     // This function will render the overlay for overlay forms
-    function renderProductForm(className) {
+    function renderProductForm(className, autofillData = null) {
         form.append(`
         <label>Product Name</label>
         <input class="name" type="text" placeholder="Example: Watch">
@@ -156,13 +202,22 @@ $(document).ready(function () {
             <option value="" selected disabled>Select One</option>
         </select>
         <br>
-        <button type="submit" class="submit-${className}">Add Product</button>
+        <button type="submit" class="submit-${className}">Submit Product</button>
         `);
         departments.forEach(department => {
             $(".department").append(`
             <option value="${department.department_name}, ${department.id}">${department.department_name}</option>
             `)
-        })
+        });
+
+        // If autofill data is detected in edit mode...
+        if (className === "edit" && autofillData) {
+            console.log("Edit detected, autofilling forms...");
+            $("input.name").val(autofillData.name);
+            $("input.stock").val(autofillData.stock);
+            $("input.price").val(autofillData.price);
+            $("select.department").val(`${autofillData.department}, ${autofillData.departmentId}`);
+        }
     }
 
     // This function opens the overlay

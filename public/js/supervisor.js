@@ -98,14 +98,6 @@ $(document).ready(function () {
 
     // These functions handle the button presses
 
-    // This function will handle the delete button
-    function handleDelete() {
-        const id = $(this).parent().parent().attr("data-department-id");
-        if (confirm("Are you sure you want to delete department " + id + "? \nThis will delete ALL corresponding products!")) {
-            deleteDepartment(id);
-        };
-    }
-
     // This function will handle the add button
     function handleAdd() {
         form.empty();
@@ -152,6 +144,14 @@ $(document).ready(function () {
         console.log("Handling cancel overlay...");
         form.empty();
         closeOverlay();
+    }
+
+    // This function will handle the delete button
+    function handleDelete() {
+        const id = $(this).parent().parent().attr("data-department-id");
+        if (confirm("Are you sure you want to delete department " + id + "? \nThis will delete ALL corresponding products!")) {
+            deleteDepartment(id);
+        };
     }
 
     // Generic functions
