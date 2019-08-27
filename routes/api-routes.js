@@ -58,7 +58,7 @@ module.exports = function (app) {
     });
 
     // Delete requests for deleting item
-    app.delete("/api/products/:id/delete", (req, res) => {
+    app.delete("/api/products/id/:id", (req, res) => {
         console.log("Going to delete " + req.params.id);
         db.Product.destroy({
             where: {

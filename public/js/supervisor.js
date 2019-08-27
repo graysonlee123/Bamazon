@@ -44,7 +44,7 @@ $(document).ready(function () {
             console.log(departments);
             if (!departments || !departments.length) {
                 displayEmpty();
-                // Do something if there are no posts found
+                // Do something if there are no products are found
             } else {
                 // This will render the rows based on the 'departments' variable
                 renderRows();
@@ -147,6 +147,7 @@ $(document).ready(function () {
         } else putDepartment(data);
     }
 
+    // This function handles the cancel button on the overlay
     function handleCancel() {
         console.log("Handling cancel overlay...");
         form.empty();
@@ -202,16 +203,6 @@ $(document).ready(function () {
         <button type="submit" class="submit-${className}">Add Product</button>
         `);
     }
-
-    // function renderEditDepartmentForm() {
-    //     form.append(`
-    //     <label>Department Name</label>
-    //     <input class="name" type="text" placeholder="Ex: Furniture"
-    //     <br>
-    //     <label>Overhead Costs</label>
-    //     <input class="
-    //     `)
-    // }
 
     // This function opens the overlay
     function openOverlay() {

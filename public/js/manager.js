@@ -1,59 +1,181 @@
 $(document).ready(function () {
+    // Grab the main display div
     const display = $("#main-container");
+    // And the overlay div
+    const overlay = $("#overlay");
+    // Grab the table element
+    const table = $("table");
+    // Grab the overlay form
+    const form = $("#form");
+    // Sets flag for products found in getProducts()
+    let products = null;
+    // Sets a variable for all departments found in getDepartments()
+    let departments = null;
+    // By default, get all products and departments
+    getProducts();
+    getDepartments();
 
-    showAllProducts();
+    // Click handlers
+    $(document).on("click", "button.add", handleAdd);
+    $(document).on("click", "button.submit-add", handleSubmitAdd);
+    $(document).on("click", "button.cancel", handleCancel);
 
-    $("#all-products").on("click", showAllProducts);
-    $("#low-inventory").on("click", showLowInventory);
-    $("#main-container").on("click", "#update-stock", updateProductStock);
-    $("#main-container").on("click", "#update-price", updatePrice);
-    $("#main-container").on("click", ".add-new-product", addNewProductForm);
-    $("#main-container").on("click", ".add-product", addProduct);
-    $("#main-container").on("click", ".delete-product", deleteProduct);
-    $("#main-container").on("click", ".cancel-product-add", removeAddProductRow);
+    // These functions handle the AJAX requests
 
-    function showAllProducts() {
-        emptyDisplay();
-        updateButtons(1);
-        console.log("Showing all products...");
-
-        $.get("/api/products").then(data => {
-            const table = createTable();
-            data.forEach(item => {
-                table.append(createProductRow(item));
-            });
-
-            display.append(table);
-            display.append(`<i class="fas fa-plus-square add-new-product"></i>`)
+    // This function will get all departments by default, or only the
+    // department specified by the ID passed into the function
+    function getProducts(id) {
+        // Sets the query if an ID is provided
+        let idQuery = id || "";
+        if (id) {
+            idQuery = "/id/" + id;
+            console.log(idQuery);
+            console.log("/api/departments%s", idQuery);
+        };
+        // If no id was passed, it will be an empty string,
+        // and just query all products
+        $.get("/api/products" + idQuery).then(productsData => {
+            products = productsData;
+            console.log(products);
+            if (!products || !products.length) {
+                displayEmpty();
+                // Do something if there are no products found
+            } else {
+                // This will render the rows based on the 'products' variable
+                renderRows();
+            }
         });
     }
 
-    function showLowInventory() {
-        emptyDisplay();
-        updateButtons(2);
-        $.get("/api/products").then(data => {
-            const table = createTable();
-            data.forEach((item, index) => {
-                if (item.stock_quantity < 5) {
-                    table.append(createProductRow(item));
-                };
-            });
+    // This function will delete a department based off of the id
+    function deleteProduct(id) {
+        if (!id) return console.log("No Id provided for deleteProduct()!");
+        $.ajax({
+            url: "/api/products/id/" + id,
+            type: "DELETE",
+            success: function (err) {
+                if (err) return console.log(err);
+                alert("Product was succesfully deleted!");
+                window.location.reload();
+            }
+        });
+    }
 
-            display.append(table);
+    // This function will post a new department
+    function postProduct(data) {
+        if (!data) return console.log("No data provided for postProduct()!");
+        console.log("Data to post: ", data);
+        $.ajax({
+            url: '/api/products',
+            type: 'POST',
+            data: data,
+            success: function () {
+                alert("Product added succesfully!");
+                window.location.reload();
+            }
+        });
+    }
+
+    // This function gets all the available departments
+    function getDepartments() {
+        $.get("/api/departments").then(departmentsData => {
+            departments = departmentsData;
+            console.log("Departments: ", departments);
         })
     }
 
-    function createTable() {
-        return $(`<table id="table">
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Department</th>
-            <th>Update Stock</th>
-            <th>Update Price</th>
-            <th>Actions</th>
-        </table>`);
+    // These are handler functions 
+
+    // This function will handle the add button
+    function handleAdd() {
+        form.empty();
+        renderProductForm("add");
+        openOverlay();
     }
+
+    // This function will get the form data and post a new product
+    function handleSubmitAdd(event) {
+        event.preventDefault();
+        let departmentInfo = $("select.department").val().split(", ");
+        console.log("Split: ", departmentInfo);
+        const data = {
+            product_name: $("input.name").val(),
+            department_name: departmentInfo[0],
+            image_file: "strangebed.jpg",
+            price: $("input.price").val(),
+            stock_quantity: $("input.stock").val(),
+            product_sales: 0.00,
+            DepartmentId: departmentInfo[1]
+        };
+
+        postProduct(data);
+    }
+
+    // This function handles the cancel button on the overlay
+    function handleCancel() {
+        console.log("Handling cancel overlay...");
+        form.empty();
+        closeOverlay();
+    }
+
+    // These are generic functions 
+
+    // This function renders a row for each product
+    function renderRows() {
+        products.forEach(item => {
+            table.append(`
+            <tr>
+                <td>${item.product_name}</td>
+                <td>${item.id}</td>
+                <td>${item.stock_quantity}</td>
+                <td>${item.price}</td>
+                <td>${item.department_name}</td>
+                <td>
+                    <button> <i class="fas fa-edit"></i> </button>
+                    <button> <i class="fas fa-times"></i> </button>
+                </td>
+            </tr>
+            `);
+        })
+    }
+
+    // This function will render the overlay for overlay forms
+    function renderProductForm(className) {
+        form.append(`
+        <label>Product Name</label>
+        <input class="name" type="text" placeholder="Example: Watch">
+        <br>
+        <label>Stock Quantity</label>
+        <input class="stock" type="text" placeholder="Ex: 200">
+        <br>
+        <label>Price</label>
+        <input class="price" type="text" placeholder="Ex: 149.99">
+        <br>
+        <label>Department</label>
+        <select class="department">
+            <option value="" selected disabled>Select One</option>
+        </select>
+        <br>
+        <button type="submit" class="submit-${className}">Add Product</button>
+        `);
+        departments.forEach(department => {
+            $(".department").append(`
+            <option value="${department.department_name}, ${department.id}">${department.department_name}</option>
+            `)
+        })
+    }
+
+    // This function opens the overlay
+    function openOverlay() {
+        overlay.css("display", "flex");
+    }
+
+    // This function closes the overlay
+    function closeOverlay() {
+        overlay.css("display", "none");
+    }
+
+    // These are OLD FUNCTIONS
 
     function createProductRow(item) {
         return $(`<tr data-product-id="${item.id}">
@@ -81,7 +203,6 @@ $(document).ready(function () {
         // Will check to see if #add-product-row already exists
         if (!$("#add-product-row").length) {
             console.log("Adding new products form...");
-            const table = $("#table");
             table.append(`<tr id="add-product-row">
                 <td>
                     <input type="text" placeholder="Product name" id="new-product-name">
@@ -103,7 +224,7 @@ $(document).ready(function () {
                     <i class="fas fa-check add-product"></i><i class="fas fa-times cancel-product-add"></i>
                 </td>
             </tr>`);
-            $.get("/api/departments", function(departments) {
+            $.get("/api/departments", function (departments) {
                 console.log(departments);
                 if (departments.length === 0) {
                     console.log("No departments detected!");
@@ -198,9 +319,9 @@ $(document).ready(function () {
         });
     }
 
-    function emptyDisplay() {
-        console.log("Emptying display...");
-        display.empty();
+    function tableEmpty() {
+        console.log("Emptying table...");
+        table.empty();
     }
 
     function updateButtons(activeButton = 1) {

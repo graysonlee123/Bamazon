@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,16 +14,28 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
+
 <body>
+    <div id="overlay">
+        <button class="cancel"> <i class="fas fa-times"></i> </button>
+        <form action="" id="form"></form>
+    </div>
+
     <div class="layout">
         <nav class="nav">
-            <ul class="list">
-                <li><input type="submit" value="All Products" id="all-products"></li>
-                <li><input type="submit" value="Low Inventory" id="low-inventory"></li>
-            </ul>
+            <a href="/">Home</a>
+            <a href="/supervisor">Supervisor View</a>
         </nav>
         <div id="main-container">
-
+            <table>
+                <th>Product Name</th>
+                <th>ID</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </table>
+            <button class="add"> <i class="fas fa-plus"></i> </button>
         </div>
         <footer class="footer">
             <span>Made by <a href="http://github.com/graysonlee123">Grayson Gantek</a></span>
@@ -31,4 +44,5 @@
 
     <script src="js/manager.js"></script>
 </body>
+
 </html>
