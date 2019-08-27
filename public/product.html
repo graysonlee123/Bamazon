@@ -21,7 +21,7 @@
 <body>
     <i class="fas fa-long-arrow-alt-left" id="products-exit"></i>
 
-    <div class="product-container">
+    <div class="product-container" nohover>
         <img id="image" src="/images/products/${product.image_file}">
         <div class="product-text-container">
             <h2 class="large-font name" id="name"></h2>
@@ -29,7 +29,7 @@
             <p class="price" id="price"></p>
             <div id="out-of-stock-warning"></div>
             <select name="quantity" id="quantity"></select>
-            <input type="submit" id="submit" value="Add to Cart">
+            <button type="submit" id="submit">Add to Cart</button>
             <span class="main-body-font low-quantity"></span>
         </div>
     </div>

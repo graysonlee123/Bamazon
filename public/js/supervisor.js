@@ -43,7 +43,6 @@ $(document).ready(function () {
             departments = departmentsData;
             console.log(departments);
             if (!departments || !departments.length) {
-                displayEmpty();
                 // Do something if there are no products are found
             } else {
                 // This will render the rows based on the 'departments' variable
@@ -161,12 +160,6 @@ $(document).ready(function () {
 
     // Generic functions
 
-    // This function will empty the display
-    function displayEmpty() {
-        console.log("Emptying display...");
-        display.empty();
-    }
-
     // This function returns a department's products total revenue
     function getDepartmentTotal(department) {
         console.log("Calculating total for department: ", department);
@@ -187,7 +180,7 @@ $(document).ready(function () {
                 <td class="department-id">${department.id}</td>
                 <td class="department-overhead">${department.over_head_costs}</td>
                 <td>${total}</td>
-                <td>${total - department.over_head_costs}</td>
+                <td>${parseFloat(total - department.over_head_costs)}</td>
                 <td>
                     <button class="edit"> <i class="fas fa-edit"></i> </button>
                     <button class="delete"> <i class="fas fa-times"></i> </button>
@@ -201,10 +194,8 @@ $(document).ready(function () {
         form.append(`
         <label>Department Name</label>
         <input class="name" type="text" placeholder="Example: Furniture">
-        <br>
         <label>Overhead Costs</label>
         <input class="overhead" type="text" placeholder="Ex: 200.00">
-        <br>
         <button type="submit" class="submit-${className}">Add Product</button>
         `);
 

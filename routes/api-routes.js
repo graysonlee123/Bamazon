@@ -25,8 +25,8 @@ module.exports = function (app) {
         });
     });
 
-    // Put requests for updating quantity
-    app.put("/api/products/:id/quantity", (req, res) => {
+    // Put requests for updating products
+    app.put("/api/products/id/:id", (req, res) => {
         db.Product.update(req.body, {
             where: {
                 id: req.params.id

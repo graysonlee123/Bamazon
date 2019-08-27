@@ -43,7 +43,6 @@ $(document).ready(function () {
             products = productsData;
             console.log(products);
             if (!products || !products.length) {
-                displayEmpty();
                 // Do something if there are no products found
             } else {
                 // This will render the rows based on the 'products' variable
@@ -76,6 +75,21 @@ $(document).ready(function () {
             data: data,
             success: function () {
                 alert("Product added succesfully!");
+                window.location.reload();
+            }
+        });
+    }
+
+    // This function will update an existing Product
+    function putProduct(data) {
+        if (!data) return console.log("No data provided for putProduct()!");
+        console.log("Data to put: ", data);
+        $.ajax({
+            url: '/api/products/id/' + selectedProductId,
+            type: 'PUT',
+            data: data,
+            success: function () {
+                alert("Product edited succesfully!");
                 window.location.reload();
             }
         });
@@ -138,12 +152,22 @@ $(document).ready(function () {
     // This function sends the put data
     function handleSubmitEdit() {
         event.preventDefault();
+
+        // Splits the value tag from the department dropdown
+        // Index [0] is name, [1] is id
+        let departmentData = $("select.department").val().split(", ");
+
         const data = {
-            name: $("input.name").val(),
-            overhead: $("input.overhead").val()
+            product_name: $("input.name").val(),
+            department_name: departmentData[0],
+            departmentId: departmentData[1],
+            price: $("input.price").val(),
+            stock_quantity: $("input.stock").val(),            
         };
 
-        if (!data.name || !data.overhead) {
+        console.log("data collected to submit: ", data);
+
+        if (!data.product_name || !data.department_name || !data.departmentId || !data.price || !data.stock_quantity ) {
             return console.log("Bad data");
         } else putProduct(data);
     }
@@ -190,18 +214,14 @@ $(document).ready(function () {
         form.append(`
         <label>Product Name</label>
         <input class="name" type="text" placeholder="Example: Watch">
-        <br>
         <label>Stock Quantity</label>
         <input class="stock" type="text" placeholder="Ex: 200">
-        <br>
         <label>Price</label>
         <input class="price" type="text" placeholder="Ex: 149.99">
-        <br>
         <label>Department</label>
         <select class="department">
             <option value="" selected disabled>Select One</option>
         </select>
-        <br>
         <button type="submit" class="submit-${className}">Submit Product</button>
         `);
         departments.forEach(department => {
@@ -372,11 +392,6 @@ $(document).ready(function () {
                 };
             }
         });
-    }
-
-    function tableEmpty() {
-        console.log("Emptying table...");
-        table.empty();
     }
 
     function updateButtons(activeButton = 1) {

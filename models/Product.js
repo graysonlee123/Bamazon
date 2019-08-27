@@ -1,5 +1,5 @@
 module.exports = function (sequelize, dataType) {
-    return sequelize.define("Product", {
+    const Product = sequelize.define("Product", {
         product_name: {
             type: dataType.STRING,
             allowNull: false,
@@ -35,4 +35,10 @@ module.exports = function (sequelize, dataType) {
             }
         }
     });
+
+    Product.associate = models => {
+        Product.belongsTo(models.Department);
+    };
+
+    return Product;
 };

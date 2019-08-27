@@ -9,7 +9,7 @@ $(document).ready(function () {
     let total = 0;
 
     $(document).on("click", "#clear-cart", clearCart);
-    $("#cart-div").on("click", "#submit-order", submitOrder);
+    $(document).on("click", "#submit-order", submitOrder);
     $(document).on("click", ".remove-cart-item", handleRemoveCartItem);
 
     if (cart.length != 0) {
@@ -22,8 +22,8 @@ $(document).ready(function () {
     } else {
         console.log("Empty Cart!");
         cartList.append(`
-        <li>Cart is empty!</li>
-        <li style="margin-bottom:16px"><a href="/">View all products</a></li>
+        <li style="font-size: 22px;">Cart is empty!</li>
+        <li style="margin-bottom:16px; margin-top: 6px;"><a href="/">View all products</a></li>
         `);
     };
 
@@ -97,7 +97,7 @@ $(document).ready(function () {
                         const newQuantity = data.stock_quantity - item.quantity;
                         const newProductSales = parseFloat(data.product_sales) + item.quantity * data.price;
                         $.ajax({
-                            url: '/api/products/' + data.id + '/quantity',
+                            url: '/api/products/id/' + data.id,
                             type: 'PUT',
                             data: { stock_quantity: newQuantity, product_sales: newProductSales },
                             success: function (err) {
