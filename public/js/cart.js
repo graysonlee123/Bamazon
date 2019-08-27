@@ -9,8 +9,8 @@ $(document).ready(function () {
     let total = 0;
 
     $(document).on("click", "#clear-cart", clearCart);
-    $("#cart-list").on("click", ".clear-cart-item", removeItemFromCart);
     $("#cart-div").on("click", "#submit-order", submitOrder);
+    $(document).on("click", ".remove-cart-item", handleRemoveCartItem);
 
     if (cart.length != 0) {
         itemsInCart = true;
@@ -21,6 +21,10 @@ $(document).ready(function () {
         $("#clear-cart").removeAttr("disabled");
     } else {
         console.log("Empty Cart!");
+        cartList.append(`
+        <li>Cart is empty!</li>
+        <li style="margin-bottom:16px"><a href="/">View all products</a></li>
+        `);
     };
 
     function clearCart() {
@@ -35,26 +39,22 @@ $(document).ready(function () {
 
             calculateTotal(product.price * product.userPurchaseQuantity);
 
-            const listItem = $("<li>");
-            listItem.addClass("cart-list-item");
-            listItem.attr("item-id", product.id);
-
-            const image = $(`<img>`);
-            image.attr("src", `/images/products/${product.image_file}`)
-            image.addClass("cart-img");
-
-            const itemName = $(`<h3>`);
-            itemName.addClass("cart-item-name");
-            itemName.text(`${product.product_name}`);
-
-            const itemQuantity = $(`<span>`);
-            itemQuantity.addClass("cart-quantity");
-            itemQuantity.text(product.userPurchaseQuantity);
-
-            const clearItem = $('<i class="fas fa-times clear-cart-item">');
-
-            listItem.append(image, itemName, itemQuantity, clearItem);
-            cartList.append(listItem);
+            cartList.append(`
+            <li class="cart-list-item">
+                <img src="/images/products/blandsofa.jpg" alt="blandsofa" class="cart-image">
+                <div>
+                    <div>Name:</div>
+                    <div>Quantity:</div>
+                </div>
+                <div>
+                    <div>${product.product_name}</div>
+                    <div>${product.userPurchaseQuantity}</div>
+                </div>
+                <div class="remove-cart-item" data-id="${product.id}">
+                    <i class="fas fa-times"></i>
+                </div>
+            </li>
+            `);
         });
     }
 
@@ -65,14 +65,12 @@ $(document).ready(function () {
         cartDiv.append(userTotalSpan);
     }
 
-    function removeItemFromCart() {
-        const itemId = $(this).parent().attr("item-id");
-        console.log(itemId);
+    function removeItemFromCart(id) {
         if (itemsInCart) {
             cart.forEach((item, index) => {
 
                 // Has to be only two equal signs, for reasons unknown
-                if (item.id == itemId) {
+                if (item.id == id) {
                     cart.splice(index, 1);
                     console.log(cart);
                     localStorage.setItem("cart", JSON.stringify(cart));
@@ -80,6 +78,13 @@ $(document).ready(function () {
                 };
             });
         };
+    }
+
+    function handleRemoveCartItem() {
+        const id = $(this).attr("data-id");
+
+        console.log("Item: ", id);
+        removeItemFromCart(id);
     }
 
     function submitOrder() {

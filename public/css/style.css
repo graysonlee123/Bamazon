@@ -208,10 +208,32 @@ a[active] {
     grid-area: footer;
 }
 
-.cart-img {
-    width: 20px;
-    height: 20px;
+.cart-image {
+    width: 60px;
+    height: 60px;
     object-fit: cover;
+}
+
+.cart-list-item {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 16px;
+
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
+.remove-cart-item {
+    width: 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 2px;
 }
 
 
