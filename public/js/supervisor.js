@@ -122,7 +122,12 @@ $(document).ready(function () {
         form.empty();
         // Goes to find the row, and look at the id column
         selectedDepartmentId = $(this).parent().parent().children(".department-id").text();
-        renderDepartmentForm("edit");
+        // Creates a data object based on the table to autofill the edit form
+        const autofillData = {
+            name: $(this).parent().parent().children(".department-name").text(),
+            overhead: $(this).parent().parent().children(".department-overhead").text()
+        };
+        renderDepartmentForm("edit", autofillData);
         openOverlay();
     }
 
@@ -178,11 +183,11 @@ $(document).ready(function () {
         departments.forEach(department => {
             const total = getDepartmentTotal(department);
             table.append(`<tr data-department-id="${department.id}">
-                <td>${department.department_name}</td>
+                <td class="department-name">${department.department_name}</td>
                 <td class="department-id">${department.id}</td>
-                <td>\$${department.over_head_costs}</td>
-                <td>\$${total}</td>
-                <td>\$${total - department.over_head_costs}</td>
+                <td class="department-overhead">${department.over_head_costs}</td>
+                <td>${total}</td>
+                <td>${total - department.over_head_costs}</td>
                 <td>
                     <button class="edit"> <i class="fas fa-edit"></i> </button>
                     <button class="delete"> <i class="fas fa-times"></i> </button>
@@ -192,7 +197,7 @@ $(document).ready(function () {
     }
 
     // This function will render the overlay for overlay forms
-    function renderDepartmentForm(className) {
+    function renderDepartmentForm(className, autofillData) {
         form.append(`
         <label>Department Name</label>
         <input class="name" type="text" placeholder="Example: Furniture">
@@ -202,6 +207,13 @@ $(document).ready(function () {
         <br>
         <button type="submit" class="submit-${className}">Add Product</button>
         `);
+
+        // If autofill data is detected in edit mode...
+        if (className === "edit" && autofillData) {
+            console.log("Edit detected, autofilling forms...");
+            $("input.name").val(autofillData.name);
+            $("input.overhead").val(autofillData.overhead);
+        }
     }
 
     // This function opens the overlay
