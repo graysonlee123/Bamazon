@@ -113,12 +113,17 @@ $(document).ready(function () {
     }
 
     function submitOrder() {
-        console.log(cartProducts);
-        cartProducts.forEach(product => {
+        cartProducts.forEach((product, index) => {
+            const newQuantity = cartProducts[index].stock_quantity - product.purchase_quantity;
+            const newSales = parseFloat(cartProducts[index].product_sales) + parseFloat(product.price * product.purchase_quantity)
+            console.log("New quantity: ", newQuantity, "New sales: ", newSales);
             $.ajax({
                 url: "/api/products/id/" + product.id,
                 type: "PUT",
-                data: product,
+                data: {
+                    stock_quantity: newQuantity,
+                    product_sales: newSales
+                },
                 success: productData => {
                     console.log("Success posting " + product.product_name);
                 }
