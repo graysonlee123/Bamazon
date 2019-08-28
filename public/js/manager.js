@@ -118,7 +118,7 @@ $(document).ready(function () {
         const data = {
             product_name: $("input.name").val(),
             department_name: departmentInfo[0],
-            image_file: "strangebed.jpg",
+            image_url: $("input.image").val(),
             price: $("input.price").val(),
             stock_quantity: $("input.stock").val(),
             product_sales: 0.00,
@@ -137,6 +137,7 @@ $(document).ready(function () {
         // Creates a data object based on the table to autofill the edit form
         const autofillData = {
             name: $(this).parent().parent().children(".product-name").text(),
+            image_url: $(this).parent().parent().find(".product-image").attr("src"),
             stock: $(this).parent().parent().children(".product-quantity").text(),
             price: $(this).parent().parent().children(".product-price").text(),
             department: $(this).parent().parent().children(".product-department").text(),
@@ -159,6 +160,7 @@ $(document).ready(function () {
         const data = {
             product_name: $("input.name").val(),
             department_name: departmentData[0],
+            image_url: $("input.image").val(),
             DepartmentId: departmentData[1],
             price: $("input.price").val(),
             stock_quantity: $("input.stock").val(),            
@@ -194,6 +196,7 @@ $(document).ready(function () {
         products.forEach(item => {
             table.append(`
             <tr>
+                <td> <img class="product-image" src="${item.image_url}" alt="${item.product_name}"> </td>
                 <td class="product-name">${item.product_name}</td>
                 <td class="product-id">${item.id}</td>
                 <td class="product-quantity">${item.stock_quantity}</td>
@@ -213,11 +216,13 @@ $(document).ready(function () {
     function renderProductForm(className, autofillData = null) {
         form.append(`
         <label>Product Name</label>
-        <input class="name" type="text" placeholder="Example: Watch">
+        <input class="name" type="text" placeholder="Watch">
+        <label>Link to Image</label>
+        <input class="image" type="text" placeholder="https://via.placeholder.com/200">
         <label>Stock Quantity</label>
-        <input class="stock" type="text" placeholder="Ex: 200">
+        <input class="stock" type="text" placeholder="200">
         <label>Price</label>
-        <input class="price" type="text" placeholder="Ex: 149.99">
+        <input class="price" type="text" placeholder="149.99">
         <label>Department</label>
         <select class="department">
             <option value="" selected disabled>Select One</option>
@@ -234,6 +239,7 @@ $(document).ready(function () {
         if (className === "edit" && autofillData) {
             console.log("Edit detected, autofilling forms...");
             $("input.name").val(autofillData.name);
+            $("input.image").val(autofillData.image_url);
             $("input.stock").val(autofillData.stock);
             $("input.price").val(autofillData.price);
             $("select.department").val(`${autofillData.department}, ${autofillData.departmentId}`);

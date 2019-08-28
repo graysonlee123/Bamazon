@@ -78,7 +78,7 @@ $(document).ready(function () {
         console.log(cartProducts)
         cartList.append(`
         <li class="cart-list-item">
-            <img src="/images/products/blandsofa.jpg" alt="" class="cart-image">
+            <img src="${product.image_url}" alt="${product.product_name}" class="cart-image">
             <div>
                 <div>Name:</div>
                 <div>Quantity:</div>
@@ -87,7 +87,7 @@ $(document).ready(function () {
             <div>
                 <div>${product.product_name}</div>
                 <div>${product.purchase_quantity}</div>
-                <div>${product.price}</div>
+                <div class="dollar">${product.price}</div>
             </div>
             <div class="remove-cart-item" data-id="${product.id}">
                 <i class="fas fa-times"></i>

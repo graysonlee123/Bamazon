@@ -4,11 +4,7 @@ module.exports = function (sequelize, dataType) {
             type: dataType.STRING,
             allowNull: false,
         },
-        department_name: {
-            type: dataType.STRING,
-            allowNull: false
-        },
-        image_file: {
+        image_url: {
             type: dataType.STRING,
             allowNull: false
         },

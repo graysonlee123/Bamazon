@@ -20,7 +20,7 @@ require("./routes/html-routes")(app);
 
 // Sync tables and start server
 // On development environments, use sync({force: true})
-db.sequelize.sync({}).then(function () {
+db.sequelize.sync({force: true}).then(function () {
 	app.listen(PORT, function () {
 		console.log("App listening on PORT " + PORT);
 	});

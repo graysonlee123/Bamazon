@@ -146,9 +146,16 @@ table th {
 table td, table th {
     border: 1px solid #ddd;
     padding: 8px;
+    vertical-align: middle;
 }
 
 tr:nth-child(even){background-color: #ececec;}
+
+.product-image {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+}
 
 /* Buttons */
 

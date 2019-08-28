@@ -28,7 +28,7 @@
                 <li class="nav-item"><a href="/cart"><i class="fas fa-shopping-cart"></i></a></li>
             </ul>
         </nav>
-    
+
         <div id="cart-wrapper">
             <div id="cart-div">
                 <span class="large-font">Your Cart</span>
@@ -36,12 +36,15 @@
                 <ul id="cart-list">
 
                 </ul>
-                <button type="submit" id="submit-order" disabled>Submit Order</button>
-                <button type="submit" id="clear-cart" disabled>Clear Cart</button>
-                <div id="total"></div>
+                <div class="cart-footer">
+                    <hr>
+                    <div class="total-div">Order total: &nbsp; <span id="total" class="dollar"></span></div>
+                    <button type="submit" id="submit-order" disabled>Submit Order</button>
+                    <button type="submit" id="clear-cart" disabled>Clear Cart</button>
+                </div>
             </div>
         </div>
-    
+
         <footer id="footer">
             <span>Created by <a href="http://www.github.com/graysonlee123">Grayson Gantek</a></span>
         </footer>

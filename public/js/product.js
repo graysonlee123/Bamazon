@@ -46,7 +46,7 @@ $(document).ready(function () {
         $("#name").text(product.product_name);
         $("#price").text(product.price);
         $("#department").text(product.Department.department_name);
-        $("#image").attr('src', '/images/products/' + product.image_file);
+        $("#image").attr('src', product.image_url);
 
         // Check the stock of the item, and only allow the user
         // to choose from what is available
