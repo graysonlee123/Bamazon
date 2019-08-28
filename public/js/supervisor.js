@@ -180,7 +180,7 @@ $(document).ready(function () {
                 <td class="department-id">${department.id}</td>
                 <td class="department-overhead">${department.over_head_costs}</td>
                 <td>${total}</td>
-                <td>${parseFloat(total - department.over_head_costs)}</td>
+                <td>${parseFloat(total - department.over_head_costs).toFixed(2)}</td>
                 <td>
                     <button class="edit"> <i class="fas fa-edit"></i> </button>
                     <button class="delete"> <i class="fas fa-times"></i> </button>
