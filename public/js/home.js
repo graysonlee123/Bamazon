@@ -23,8 +23,8 @@ $(document).ready(function () {
                 <img class="product-image" src="${product.image_url}">
                 <div class="product-text-container">
                     <h2 class="product-name large-font name">${product.product_name}<span class="main-body-font low-quantity">${lowQuantity}</span></h2>
-                    <p class="product-department department">${product.department_name}</p>
-                    <p class="product-price price">\$${product.price}</p>
+                    <p class="product-department department">${product.Department.department_name}</p>
+                    <p class="product-price price dollar">${product.price}</p>
                 </div>
             </div>`);
             });
