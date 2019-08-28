@@ -97,7 +97,7 @@ $(document).ready(function () {
     }
 
     function updateTotal() {
-        $("#total").text(total);
+        $("#total").text(total.toFixed(2));
     }
 
     function removeItemFromCart(id) {
@@ -123,32 +123,13 @@ $(document).ready(function () {
                 data: {
                     stock_quantity: newQuantity,
                     product_sales: newSales
-                },
-                success: productData => {
-                    console.log("Success posting " + product.product_name);
                 }
             });
         });
-            // $.ajax({
-            //     url: '/api/products/id/' + item.id,
-            //     type: 'GET',
-            //     success: data => {
-            //         const newQuantity = data.stock_quantity - item.quantity;
-            //         const newProductSales = parseFloat(data.product_sales) + item.quantity * data.price;
-            //         $.ajax({
-            //             url: '/api/products/id/' + data.id,
-            //             type: 'PUT',
-            //             data: { stock_quantity: newQuantity, product_sales: newProductSales },
-            //             success: function (err) {
-            //                 if (err) return console.log(err);
-            //                 else {
-            //                     alert("Price updated succesfully! You were charged: $" + parseFloat(total));
-            //                     clearCart();
-            //                     window.location.href = "/"
-            //                 };
-            //             }
-            //         });
-            //     }
-            // });
+
+        if (confirm("Purchase succesfull! You were charged $" + total.toFixed(2) + ".")) {
+            clearCart();
+            window.location.href="/";
+        }
     }
 });

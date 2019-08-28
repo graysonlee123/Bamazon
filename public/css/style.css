@@ -245,6 +245,7 @@ a[active] {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-flow: column nowrap;
     background-color: #F8F8F8;
 }
 
