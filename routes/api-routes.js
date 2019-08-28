@@ -1,5 +1,6 @@
 //Require model usage
 const db = require("../models");
+const Op = require("sequelize").Op;
 
 //Exports function for server.js to use
 module.exports = function (app) {
@@ -12,6 +13,13 @@ module.exports = function (app) {
 
     app.get("/api/products/id/:id", (req, res) => {
         db.Product.findOne({ where: { id: req.params.id }, include: [db.Department] }).then(data => {
+            if (data) res.json(data)
+            else res.status(404).json({ message: "Not Found" });
+        });
+    });
+
+    app.get("/api/products/li", (req, res) => {
+        db.Product.findAll({ where: { stock_quantity: { [Op.lt]: 10 } }, include: [db.Department] }).then(data => {
             if (data) res.json(data)
             else res.status(404).json({ message: "Not Found" });
         });

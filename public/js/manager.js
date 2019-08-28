@@ -24,20 +24,23 @@ $(document).ready(function () {
     $(document).on("click", "button.edit", handleEdit);
     $(document).on("click", "button.submit-edit", handleSubmitEdit);
     $(document).on("click", "button.cancel", handleCancel);
+    $("input.low-inventory-button").change(handleLowInv);
 
     // These functions handle the AJAX requests
 
     // This function will get all products by default, or only the
     // department specified by the ID passed into the function
-    function getProducts(id) {
+    function getProducts(id, lowInventory) {
         // Sets the query if an ID is provided
-        let idQuery = id || "";
+        let query = id || "";
         if (id) {
-            idQuery = "/id/" + id;
-        };
+            query = "/id/" + id;
+        } else if (lowInventory) {
+            query = "/li"
+        }
         // If no id was passed, it will be an empty string,
         // and just query all products
-        $.get("/api/products" + idQuery).then(productsData => {
+        $.get("/api/products" + query).then(productsData => {
             products = productsData;
             console.log(products);
             if (!products || !products.length) {
@@ -187,6 +190,17 @@ $(document).ready(function () {
         if (confirm("Are you sure you want to delete product " + name + "?")) {
             deleteProduct(id);
         };
+    }
+
+    // This function handles the low inventory view
+    function handleLowInv() {
+        if ($(this).is(':checked')) {
+            table.children("tr").remove();
+            getProducts(null, true);
+        } else {
+            table.children("tr").remove();
+            getProducts();
+        }
     }
 
     // These are generic functions 
