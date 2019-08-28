@@ -34,7 +34,7 @@ $(document).ready(function () {
 
     // Handles the submit button
     function handleSubmit() {
-        checkCart();
+        if (checkCart()) addToCart();
         console.log("Checking cart...");
     }
 
@@ -78,7 +78,7 @@ $(document).ready(function () {
             });
         };
 
-        if (alreadyInCart === false) addToCart();
+        if (alreadyInCart === false) return true;
     }
 
     // Adds the item to the local storage cart,
