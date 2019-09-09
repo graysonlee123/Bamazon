@@ -6,6 +6,14 @@ Bamazon is a reatil website that allows interaction with fake products and depar
 
 Visit the deployed link [here](https://murmuring-fortress-49853.herokuapp.com/)
 
+## Usage
+
+You can "purchase" items to update the database. 
+
+The manager view can be accessed by going to [/manager](https://murmuring-fortress-49853.herokuapp.com/manager), and the supervisor view can be accessed by going to [/supervisor](https://murmuring-fortress-49853.herokuapp.com/supervisor).
+
+The manager can edit products, while the supervisor can edit departments. Deleting a department will delete all products in the department.
+
 ## Built With
 
 * [MySQL](https://www.mysql.com/)
